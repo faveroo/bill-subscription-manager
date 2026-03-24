@@ -16,11 +16,11 @@ class AuthController extends Controller
         ]);
 
         if (Auth::attempt($data)) {
-            return redirect()->route('dashboard');
+            return redirect()->intended('dashboard');
         }
 
         return back()->withErrors([
-            'email' => 'Invalid credentials',
+            'error' => 'Invalid credentials',
         ]);
     }
 
@@ -36,7 +36,7 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        return redirect()->route('dashboard');
+        return redirect()->intended('dashboard');
     }
 
     public function logout(Request $request)
