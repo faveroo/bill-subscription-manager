@@ -3,7 +3,8 @@ import { useForm, Link } from "@inertiajs/react";
 export default function LoginForm() {
     const { data, setData, post, processing, errors } = useForm({
         email: '',
-        password: ''
+        password: '',
+        error: '',
     });
 
     function handleSubmit(e: React.FormEvent) {
@@ -28,7 +29,7 @@ export default function LoginForm() {
                 value={data.password}
                 onChange={e => setData('password', e.target.value)}
                 placeholder="Senha"
-                className="bg-zinc-800 text-white rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-stone-500 transition-colors"
+                className={`bg-zinc-800 text-white rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-stone-500 transition-colors ${errors.password ? 'ring-2 ring-red-500' : ''}`}
             />
 
             <button
@@ -39,11 +40,19 @@ export default function LoginForm() {
                 Entrar
             </button>
 
-            {errors.email && (
-                <p className="text-red-500 text-sm mt-1">{errors.email}</p>
-            )}
+            <div className="mt-2">
+                {Object.values(errors).length > 0 && (
+                    <div className="text-red-500 text-sm mt-1 space-y-1">
+                        {Object.values(errors).map((error, index) => (
+                            <p key={index}>{error}</p>
+                        ))}
+                    </div>
+                )}
+            </div>
 
-            <div className="mt-4 text-center">
+
+
+            <div className="text-center">
                 <Link href="/register" className="text-sm text-zinc-400 hover:text-white transition-colors">
                     Não possui conta? Cadastre-se
                 </Link>
