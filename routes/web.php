@@ -10,3 +10,8 @@ Route::middleware('guest')->group(function () {
     Route::inertia('/register', 'auth/Register')->name('register');
     Route::post('/register', [AuthController::class, 'store'])->middleware('throttle:5,1');
 });
+
+Route::middleware('auth')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::inertia('/dashboard', 'main/Dashboard')->name('dashboard');
+});
