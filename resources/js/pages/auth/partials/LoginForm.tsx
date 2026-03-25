@@ -1,16 +1,33 @@
 import { useForm, Link } from "@inertiajs/react";
+import { useEffect, useMemo } from "react";
 
 export default function LoginForm() {
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, post, processing, errors, hasErrors, clearErrors } = useForm({
         email: '',
         password: '',
-        error: '',
+        error: ''
     });
+
+    const errorKey = useMemo(() => JSON.stringify(errors), [errors]);
 
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         post('/login');
     }
+
+    useEffect(() => {
+        if (!hasErrors) {
+            return;
+        }
+
+        const timeoutId = window.setTimeout(() => {
+            clearErrors();
+        }, 8000);
+
+        return () => {
+            window.clearTimeout(timeoutId);
+        };
+    }, [hasErrors, errorKey, clearErrors]);
 
     return (
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
