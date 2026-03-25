@@ -16,7 +16,7 @@ class AuthController extends Controller
         ]);
 
         if (Auth::attempt($data)) {
-            return redirect()->intended('main/Dashboard');
+            return redirect()->intended('dashboard');
         }
 
         return back()->withErrors([
@@ -36,7 +36,7 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        return redirect()->intended('main/Dashboard');
+        return redirect()->intended('dashboard');
     }
 
     public function logout(Request $request)
