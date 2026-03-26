@@ -14,4 +14,13 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::inertia('/dashboard', 'main/Dashboard')->name('dashboard');
+
+    Route::inertia('/subscriptions', 'subscriptions/Index')->name('subscriptions.index');
+
+    Route::inertia('/categories', 'categories/Index')->name('categories.index');
+    
+    Route::inertia('/reports', 'reports/Index')->name('reports.index');
+    
+    Route::inertia('/settings', 'settings/Index')->name('settings.index');
+
 });
