@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MainController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -13,7 +14,7 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    Route::inertia('/dashboard', 'main/Dashboard')->name('dashboard');
+    Route::get('/dashboard', [MainController::class, 'dashboard'])->name('dashboard');
 
     Route::inertia('/subscriptions', 'subscriptions/Index')->name('subscriptions.index');
 
