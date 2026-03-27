@@ -60,7 +60,7 @@ export default function DashboardPage() {
 
                 <div className="flex flex-wrap items-center gap-2">
                     <Link
-                        href="/subscriptions"
+                        href="/subscriptions/new"
                         className={cn(
                             "inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium",
                             "bg-emerald-500/15 text-emerald-100 ring-1 ring-emerald-500/25",
