@@ -1,21 +1,88 @@
 import { Link } from "@inertiajs/react";
 import { useState } from "react";
+import type { ReactNode } from "react";
 
 type SidebarItem = {
   label: string;
-  icon: string;
   href: string;
+};
+
+function Icon({ children, title }: { children: ReactNode; title?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className="h-5 w-5 shrink-0 text-white"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.8}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden={title ? undefined : true}
+      role={title ? "img" : undefined}
+    >
+      {title ? <title>{title}</title> : null}
+      {children}
+    </svg>
+  );
+}
+
+const iconsByHref: Record<string, ReactNode> = {
+  "/dashboard": (
+    <Icon title="Dashboard">
+      <path d="M4 13h6V4H4v9z" />
+      <path d="M14 20h6v-7h-6v7z" />
+      <path d="M14 11h6V4h-6v7z" />
+      <path d="M4 20h6v-5H4v5z" />
+    </Icon>
+  ),
+  "/subscriptions": (
+    <Icon title="Assinaturas">
+      <rect x="3" y="5" width="18" height="14" rx="2" />
+      <path d="M3 10h18" />
+      <path d="M7 15h4" />
+    </Icon>
+  ),
+  "/categories": (
+    <Icon title="Categorias">
+      <path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6" />
+      <path d="M16 4h4v4" />
+      <path d="M20 4l-8 8" />
+    </Icon>
+  ),
+  "/reports": (
+    <Icon title="Relatórios">
+      <path d="M4 19V5" />
+      <path d="M8 19V9" />
+      <path d="M12 19v-4" />
+      <path d="M16 19V7" />
+      <path d="M20 19V11" />
+    </Icon>
+  ),
+  "/settings": (
+    <Icon title="Configurações">
+      <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
+      <path d="M19.4 15a7.8 7.8 0 0 0 .1-1 7.8 7.8 0 0 0-.1-1l2-1.5-2-3.5-2.4 1a8 8 0 0 0-1.7-1l-.4-2.6H10l-.4 2.6a8 8 0 0 0-1.7 1l-2.4-1-2 3.5 2 1.5a7.8 7.8 0 0 0-.1 1 7.8 7.8 0 0 0 .1 1l-2 1.5 2 3.5 2.4-1c.5.4 1.1.7 1.7 1l.4 2.6h4l.4-2.6c.6-.3 1.2-.6 1.7-1l2.4 1 2-3.5-2-1.5z" />
+    </Icon>
+  ),
+};
+
+const labelsByHref: Record<string, string> = {
+  "/dashboard": "Dashboard",
+  "/subscriptions": "Assinaturas",
+  "/categories": "Categorias",
+  "/reports": "Relatórios",
+  "/settings": "Configurações",
 };
 
 export default function Sidebar() {
   const [open, setOpen] = useState<boolean>(true);
 
   const items: SidebarItem[] = [
-    { label: "Dashboard", icon: "🏠", href: "/dashboard" },
-    { label: "Assinaturas", icon: "💳", href: "/subscriptions" },
-    { label: "Categorias", icon: "🏷", href: "/categories" },
-    { label: "Relatórios", icon: "📊", href: "/reports" },
-    { label: "Configurações", icon: "⚙️", href: "/settings" },
+    { label: "Dashboard", href: "/dashboard" },
+    { label: "Assinaturas", href: "/subscriptions" },
+    { label: "Categorias", href: "/categories" },
+    { label: "Relatórios", href: "/reports" },
+    { label: "Configurações", href: "/settings" },
   ];
 
   return (
@@ -36,8 +103,14 @@ export default function Sidebar() {
         {items.map((item, index) => (
           <Link href={item.href} key={index}>
             <div className="flex items-center gap-5 p-3 rounded cursor-pointer hover:bg-zinc-500 transition-colors">
-              <span>{item.icon}</span>
-              {open && <span className="text-sm text-white">{item.label}</span>}
+              <span className="grid place-items-center">
+                {iconsByHref[item.href]}
+              </span>
+              {open && (
+                <span className="text-sm text-white">
+                  {labelsByHref[item.href]}
+                </span>
+              )}
             </div>
           </Link>
         ))}
