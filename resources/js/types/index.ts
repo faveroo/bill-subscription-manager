@@ -8,6 +8,8 @@ export type Subscription = {
 
 export type PageProps = {
     subscriptions?: Subscription[];
+    totalSubscriptions?: number;
+    valueOfSubscriptions?: number;
 
     auth?: {
         user?: {
