@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\SubscriptionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,6 +18,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [MainController::class, 'dashboard'])->name('dashboard');
 
     Route::inertia('/subscriptions', 'subscriptions/Index')->name('subscriptions.index');
+    Route::get('/subscriptions/new', [SubscriptionController::class, 'create'])->name('subscriptions.new');
+    Route::post('/subscriptions', [SubscriptionController::class, 'store'])->name('susbcription.store');
 
     Route::inertia('/categories', 'categories/Index')->name('categories.index');
     
