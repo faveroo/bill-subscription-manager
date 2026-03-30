@@ -16,9 +16,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/dashboard', [MainController::class, 'dashboard'])->name('dashboard');
 
-    Route::inertia('/subscriptions', 'subscriptions/Index')->name('subscriptions.index');
+    Route::get('/subscriptions', [SubscriptionController::class, 'index'])->name('subscriptions.index');
     Route::get('/subscriptions/new', [SubscriptionController::class, 'create'])->name('subscriptions.new');
     Route::post('/subscriptions', [SubscriptionController::class, 'store'])->name('susbcription.store');
+    Route::get('/subscriptions/{id}', [SubscriptionController::class, 'show'])->name('subscriptions.show');
 
     Route::inertia('/categories', 'categories/Index')->name('categories.index');
     
