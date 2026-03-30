@@ -10,8 +10,10 @@ use Illuminate\Support\Facades\Auth;
 class SubscriptionController extends Controller
 {   
     public function index()
-    {
-        $subscriptions = Auth::user()->subscriptions()->with('billingCycle')->get();
+    {   
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $subscriptions = $user->subscriptions()->with('billingCycle')->get();
         return inertia('subscriptions/Index', [
             'subscriptions' => $subscriptions
         ]);

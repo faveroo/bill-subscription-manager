@@ -1,5 +1,6 @@
 import { Link, usePage } from "@inertiajs/react";
-import type { PageProps, Subscription } from "@/types";
+import type { PageProps } from "@/types/pages/dashboard";
+import { Subscription } from "@/types/model/subscription";
 
 import { Card } from "./components/Card";
 import { IconAlert, IconArrowRight, IconPlus, IconSpark, IconWallet } from "./components/Icons";
