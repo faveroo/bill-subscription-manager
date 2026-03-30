@@ -44,7 +44,7 @@ export default function NewSubscription({ billingCycles }: Props) {
                         value={data.name}
                         onChange={(e) => setData("name", e.target.value)}
                         className={`w-full text-white border rounded-lg p-2 focus:outline-none foucs:ring-1 focus:border-zinc-400 transition-colors ${
-                            errors.name ? "border-red-500 ring-1 ring-red-500" : ""
+                            errors.name ? "border-red-500 ring-1 ring-red-500" : "border-zinc-400"
                         }`}
                     />
                     {errors.name && (
@@ -65,7 +65,7 @@ export default function NewSubscription({ billingCycles }: Props) {
                         value={data.price}
                         onChange={(e) => setData("price", e.target.value)}
                         className={`w-full text-white border rounded-lg p-2 focus:outline-none foucs:ring-1 focus:border-zinc-400 transition-colors ${
-                            errors.price ? "border-red-500 ring-1 ring-red-500" : ""
+                            errors.price ? "border-red-500 ring-1 ring-red-500" : "border-zinc-400"
                         }`}
                     />
                     {errors.price && (
@@ -90,7 +90,7 @@ export default function NewSubscription({ billingCycles }: Props) {
                                 className={`w-full text-white border rounded-lg p-2 pb-3 text-center focus:outline-none foucs:ring-1 focus:border-zinc-400 transition-colors ${
                                     errors.billing_cycle_id
                                     ? "border-red-500 ring-1 ring-red-500"
-                                    : ""
+                                    : "border-zinc-400"
                                 }`}
                                 >
                                 <option value="">Selecione</option>
@@ -100,6 +100,11 @@ export default function NewSubscription({ billingCycles }: Props) {
                                     </option>
                                 ))}
                             </select>
+                            {errors.billing_cycle_id && (
+                                <p className="text-red-500 text-sm mt-1">
+                                    {errors.billing_cycle_id}
+                                </p>
+                            )}
                         </div>
                         
                         <div>
@@ -111,19 +116,20 @@ export default function NewSubscription({ billingCycles }: Props) {
                                 value={data.last_billing}
                                 onChange={(e) => setData("last_billing", e.target.value)}
                                 className={`w-full text-white border rounded-lg p-2 focus:outline-none foucs:ring-1 focus:border-zinc-400 transition-colors ${
-                                    errors.billing_cycle_id
+                                    errors.last_billing
                                         ? "border-red-500 ring-1 ring-red-500"
-                                        : ""
+                                        : "border-zinc-400"
                                 }`}
                             />
+                            {errors.last_billing && (
+                                <p className="text-red-500 text-sm mt-1">
+                                    {errors.last_billing}
+                                </p>
+                            )}
                         </div>
                     </div>
 
-                    {errors.billing_cycle_id && (
-                        <p className="text-red-500 text-sm mt-1">
-                            {errors.billing_cycle_id}
-                        </p>
-                    )}
+                    
                 </div>
 
                 {/* Botão */}
