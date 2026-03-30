@@ -166,7 +166,7 @@ export default function DashboardPage() {
                         </p>
                         <div className="mt-4">
                             <Link
-                                href="/subscriptions"
+                                href="/subscriptions/new"
                                 className={cn(
                                     "inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium",
                                     "bg-white/5 text-zinc-100 ring-1 ring-white/10 hover:bg-white/10 transition-colors",
