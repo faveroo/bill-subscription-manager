@@ -4,5 +4,6 @@ export type Subscription = {
     id: number;
     name: string;
     price: number;
-    billingCycle?: BillingCycle;
+    next_billing_date: string;
+    billing_cycle?: BillingCycle;
 };
