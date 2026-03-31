@@ -1,4 +1,4 @@
-import { Subscription } from "@/types";
+import type { Subscription } from "@/types/model/subscription";
 
 export default function SubsCard({ subscription }: { subscription: Subscription }) {
     return (
