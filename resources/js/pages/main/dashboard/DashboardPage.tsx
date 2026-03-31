@@ -126,7 +126,7 @@ export default function DashboardPage() {
                         {subscriptions.map((sub) => {
                             const nextDate = parseDateOnly(sub.next_billing_date);
                             const nextLabel = nextDate ? dayMonth.format(nextDate) : "Sem data";
-                            const cycle = sub.billing_cycle ? String(sub.billing_cycle) : null;
+                            console.log(sub)
 
                             return (
                                 <Card key={sub.id} className="p-5">
@@ -138,9 +138,9 @@ export default function DashboardPage() {
                                                 <span className="inline-flex items-center rounded-full bg-white/5 px-2.5 py-1 text-xs text-zinc-200 ring-1 ring-white/10">
                                                     Próximo: {nextLabel}
                                                 </span>
-                                                {cycle ? (
+                                                {sub.billing_cycle ? (
                                                     <span className="inline-flex items-center rounded-full bg-white/5 px-2.5 py-1 text-xs text-zinc-200 ring-1 ring-white/10">
-                                                        Ciclo: {cycle}
+                                                        Ciclo: {sub.billing_cycle.name}
                                                     </span>
                                                 ) : null}
                                             </div>
