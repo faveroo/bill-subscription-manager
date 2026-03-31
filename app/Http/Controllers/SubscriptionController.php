@@ -45,6 +45,8 @@ class SubscriptionController extends Controller
             /** @var \App\Models\User $user */
             $user = Auth::user();
             $subscription = $user->subscriptions()->with('billingCycle')->findOrFail($id);
-            dd($subscription);
+            return inertia('subscriptions/Subscription', [
+                'subscription' => $subscription
+            ]);
     }
 }
