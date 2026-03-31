@@ -11,7 +11,7 @@ class DashboardLoaderService
     public function load(): array
     {
         return [
-            'subscriptions' => User::find(Auth::id())->subscriptions()->get()->toArray(),
+            'subscriptions' => User::find(Auth::id())->subscriptions()->with('billingCycle')->get()->toArray(),
             'totalSubscriptions' => $this->totalSubscriptions(),
             'valueOfSubscriptions' => $this->valueOfSubscriptions(),
         ];
