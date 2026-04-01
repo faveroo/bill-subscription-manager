@@ -49,4 +49,17 @@ class SubscriptionController extends Controller
                 'subscription' => $subscription
             ]);
     }
+
+    public function destroy($id)
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $sub = $user->subscriptions()->find($id);
+        
+        if(!$sub) return redirect()->back()->withErrors('error', 'Erro ao deletar assinatura');
+
+        $sub->delete();
+
+        return redirect()->route('subscriptions.index')->with('success', 'Assinatura deletada com sucesso!');
+    }
 }
