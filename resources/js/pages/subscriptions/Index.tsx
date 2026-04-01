@@ -1,4 +1,4 @@
-import { Head, Link, usePage } from "@inertiajs/react";
+import { Head, Link, usePage, useForm, router } from "@inertiajs/react";
 import type { ReactNode } from "react";
 import { useState } from "react";
 import { getSubscriptionIcon } from "@/icons/subscriptionIcons";
@@ -28,6 +28,15 @@ export default function Assinaturas() {
 
         return matchesName && matchesBillingCycle && matchesDate;
     });
+
+    const { processing } = useForm();
+
+    function handleDelete (id: number, e: React.MouseEvent<HTMLButtonElement>) {
+        e.preventDefault();
+        if (!confirm("Tem certeza que deseja excluir?")) return;
+        
+        router.delete(`subscription/${id}`)
+    }
     return (
         <>
             <Head title="Assinaturas" />
@@ -95,9 +104,13 @@ export default function Assinaturas() {
                                     Editar
                                 </button>
 
-                                <button className="border border-red-600 w-full text-white px-3 py-1 rounded cursor-pointer hover:bg-red-600 transition-colors">
-                                    Excluir
-                                </button>
+                                    <button 
+                                        onClick={(e) => handleDelete(subscription.id, e)}
+                                        className="border border-red-600 w-full text-white px-3 py-1 rounded cursor-pointer hover:bg-red-600 transition-colors"
+                                        disabled={processing}
+                                    >
+                                        <p>{processing ? 'Excluindo' : 'Excluir'}</p>
+                                    </button>
                             </div>
                         </li>
                     ))}
