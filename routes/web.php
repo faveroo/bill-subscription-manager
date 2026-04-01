@@ -20,6 +20,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/subscriptions/new', [SubscriptionController::class, 'create'])->name('subscriptions.new');
     Route::post('/subscriptions', [SubscriptionController::class, 'store'])->name('susbcription.store');
     Route::get('/subscriptions/{id}', [SubscriptionController::class, 'show'])->name('subscriptions.show');
+    Route::delete('subscription/{id}', [SubscriptionController::class, 'destroy'])->name('subscription.destroy');
 
     Route::inertia('/categories', 'categories/Index')->name('categories.index');
     
