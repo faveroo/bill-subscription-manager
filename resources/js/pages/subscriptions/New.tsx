@@ -20,7 +20,7 @@ export default function NewSubscription({ billingCycles }: Props) {
         last_billing: ""
     })
 
-    function handleSubmit(e: React.FormEvent) {
+    function handleSubmit(e: React.SubmitEvent) {
         e.preventDefault();
         post("/subscriptions");
     }
