@@ -1,15 +1,9 @@
 import { Subscription } from "../model/subscription";
+import { auth } from "../model/auth"
 
 export type PageProps = {
     subscriptions?: Subscription[];
     totalSubscriptions?: number;
     valueOfSubscriptions?: number;
-
-    auth?: {
-        user?: {
-            id: number;
-            name: string;
-            email: string;
-        };
-    };
+    auth?: auth
 };
