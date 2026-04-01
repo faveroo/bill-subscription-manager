@@ -50,6 +50,35 @@ class SubscriptionController extends Controller
             ]);
     }
 
+    public function edit($id)
+    {
+            /** @var \App\Models\User $user */
+            $user = Auth::user();
+            $subscription = $user->subscriptions()->with('billingCycle')->findOrFail($id);
+
+            return inertia('subscriptions/Edit', [
+                'subscription' => $subscription,
+                'billingCycles' => BillingCycle::select('id', 'name')->get()
+            ]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'price' => ['required', 'numeric', 'min:0'],
+            'billing_cycle_id' => ['required', 'exists:billing_cycles,id'],
+            'last_billing' => ['required', 'date'],
+        ]);
+
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $subscription = $user->subscriptions()->findOrFail($id);
+        $subscription->update($data);
+
+        return redirect()->route('subscriptions.show', $subscription->id)->with('success', 'Assinatura atualizada com sucesso!');
+    }
+
     public function destroy($id)
     {
         /** @var \App\Models\User $user */

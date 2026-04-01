@@ -2,40 +2,45 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import type { ReactNode } from 'react';
 import { getSubscriptionIcon } from '@/icons/subscriptionIcons';
 import type { BillingCycle } from '@/types/model/billingCycle';
+import type { Subscription } from '@/types/model/subscription';
 import MainLayout from '../../layouts/MainLayout';
 
 type Props = {
+    subscription: Subscription;
     billingCycles: BillingCycle[];
 };
 
-export default function NewSubscription({ billingCycles }: Props) {
-    const { data, setData, post, processing, errors } = useForm({
-        name: '',
-        price: '',
-        billing_cycle_id: '',
-        last_billing: '',
+export default function EditSubscription({
+    subscription,
+    billingCycles,
+}: Props) {
+    const { data, setData, put, processing, errors } = useForm({
+        name: subscription.name ?? '',
+        price: String(subscription.price ?? ''),
+        billing_cycle_id: String(subscription.billing_cycle?.id ?? ''),
+        last_billing: subscription.last_billing ?? '',
     });
 
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
-        post('/subscriptions');
+        put(`/subscriptions/${subscription.id}`);
     }
 
     return (
         <>
-            <Head title="Nova Assinatura" />
+            <Head title={`Editar • ${subscription.name}`} />
 
             <div className="mx-auto w-full max-w-xl space-y-4">
                 <div className="flex items-center justify-between gap-3">
                     <div className="min-w-0">
                         <Link
-                            href="/subscriptions"
+                            href={`/subscriptions/${subscription.id}`}
                             className="inline-flex items-center rounded border border-zinc-500/70 px-3 py-1 text-sm text-white transition-colors hover:border-zinc-400"
                         >
                             Voltar
                         </Link>
                         <h1 className="mt-3 truncate text-2xl font-semibold text-white">
-                            Nova assinatura
+                            Editar assinatura
                         </h1>
                     </div>
 
@@ -158,7 +163,7 @@ export default function NewSubscription({ billingCycles }: Props) {
                             disabled={processing}
                             className="w-full cursor-pointer rounded-lg bg-blue-600 py-2 text-white transition hover:bg-blue-700"
                         >
-                            {processing ? 'Salvando...' : 'Criar assinatura'}
+                            {processing ? 'Salvando...' : 'Salvar alterações'}
                         </button>
                     </form>
                 </div>
@@ -167,4 +172,4 @@ export default function NewSubscription({ billingCycles }: Props) {
     );
 }
 
-NewSubscription.layout = (page: ReactNode) => <MainLayout>{page}</MainLayout>;
+EditSubscription.layout = (page: ReactNode) => <MainLayout>{page}</MainLayout>;

@@ -1,7 +1,7 @@
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import type { ReactNode } from 'react';
-import type { SubscriptionInfoProps } from '@/types/pages/subscriptions';
 import { getSubscriptionIcon } from '@/icons/subscriptionIcons';
+import type { SubscriptionInfoProps } from '@/types/pages/subscriptions';
 import MainLayout from '../../layouts/MainLayout';
 
 function formatCurrencyBRL(value: number) {
@@ -54,7 +54,7 @@ export default function SubscriptionInfo() {
                         </h1>
                     </div>
 
-                    <div className="text-white/95">
+                    <div className="shrink-0 text-white/95">
                         {getSubscriptionIcon(subscription.name, {
                             size: 64,
                             title: subscription.name,
@@ -100,6 +100,13 @@ export default function SubscriptionInfo() {
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                         <div className="text-sm text-zinc-300">Ações</div>
                         <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
+                            <Link
+                                href={`/subscriptions/edit/${subscription.id}`}
+                                className="rounded border border-blue-600 px-4 py-2 text-center text-sm text-white transition-colors hover:bg-blue-600"
+                            >
+                                Editar
+                            </Link>
+
                             <button
                                 type="button"
                                 onClick={handleDelete}
