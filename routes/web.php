@@ -17,12 +17,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [MainController::class, 'dashboard'])->name('dashboard');
 
     Route::get('/subscriptions', [SubscriptionController::class, 'index'])->name('subscriptions.index');
-    Route::get('/subscriptions/new', [SubscriptionController::class, 'create'])->name('subscriptions.new');
-    Route::get('/subscriptions/edit/{id}', [SubscriptionController::class, 'edit'])->name('subscriptions.edit');
     Route::post('/subscriptions', [SubscriptionController::class, 'store'])->name('susbcription.store');
-    Route::put('/subscriptions/{id}', [SubscriptionController::class, 'update'])->name('subscriptions.update');
+    Route::get('/subscriptions/new', [SubscriptionController::class, 'create'])->name('subscriptions.new');
     Route::get('/subscriptions/{id}', [SubscriptionController::class, 'show'])->name('subscriptions.show');
+    Route::put('/subscriptions/{id}', [SubscriptionController::class, 'update'])->name('subscriptions.update');
     Route::delete('subscription/{id}', [SubscriptionController::class, 'destroy'])->name('subscription.destroy');
+    Route::get('/subscriptions/{id}/edit', [SubscriptionController::class, 'edit'])->name('subscriptions.edit');
 
     Route::inertia('/categories', 'categories/Index')->name('categories.index');
     

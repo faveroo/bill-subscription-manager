@@ -101,7 +101,7 @@ export default function SubscriptionInfo() {
                         <div className="text-sm text-zinc-300">Ações</div>
                         <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
                             <Link
-                                href={`/subscriptions/edit/${subscription.id}`}
+                                href={`/subscriptions/${subscription.id}/edit/`}
                                 className="rounded border border-blue-600 px-4 py-2 text-center text-sm text-white transition-colors hover:bg-blue-600"
                             >
                                 Editar
