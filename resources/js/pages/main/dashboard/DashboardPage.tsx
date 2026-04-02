@@ -92,7 +92,7 @@ export default function DashboardPage() {
                 <MetricCard
                     label="Assinaturas ativas"
                     value={String(activeCount)}
-                    helper={subscriptions.length ? "Do seu usuário" : props.totalSubscriptions ? "Total do sistema" : undefined}
+                    helper="Do seu usuário"
                     icon={<IconSpark className="h-5 w-5" />}
                     accent="emerald"
                 />
@@ -129,7 +129,6 @@ export default function DashboardPage() {
                         {subscriptions.map((sub) => {
                             const nextDate = parseDateOnly(sub.next_billing_date);
                             const nextLabel = nextDate ? dayMonth.format(nextDate) : "Sem data";
-                            console.log(sub)
 
                             return (
                                 <Card key={sub.id} className="p-5">
