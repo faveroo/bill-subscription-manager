@@ -8,12 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-#[Fillable(['subscription_id', 'user_id', 'name', 'price', 'next_billing_date', 'billing_cycle_id', 'last_billing'])]
+#[Fillable(['subscription_id', 'user_id', 'name', 'price', 'category_id', 'next_billing_date', 'billing_cycle_id', 'last_billing'])]
 class Subscription extends Model
 {
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
     }
 
     public function billingCycle(): BelongsTo
