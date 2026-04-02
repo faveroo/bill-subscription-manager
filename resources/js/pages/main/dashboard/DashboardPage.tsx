@@ -23,6 +23,9 @@ export default function DashboardPage() {
 
     const subscriptions = (props.subscriptions ?? []) as DashboardSubscription[];
     const today = startOfDay(new Date());
+    const sumDays = new Date(today);
+    sumDays.setDate(today.getDate() + 10);
+    const formatted = sumDays.toLocaleDateString("pt-BR");
 
     const money = new Intl.NumberFormat("pt-BR", {
         style: "currency",
@@ -161,7 +164,7 @@ export default function DashboardPage() {
                     </div>
                 ) : (
                     <Card className="p-6">
-                        <p className="text-sm font-medium text-white">Nenhuma assinatura encontrada.</p>
+                        <p className="text-sm font-medium text-white">Nenhuma assinatura com cobrança até {formatted}</p>
                         <p className="mt-1 text-sm text-zinc-400">
                             Crie sua primeira assinatura e comece a acompanhar gastos recorrentes.
                         </p>
