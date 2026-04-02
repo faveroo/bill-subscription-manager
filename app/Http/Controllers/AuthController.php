@@ -16,6 +16,8 @@ class AuthController extends Controller
         ]);
 
         if (Auth::attempt($data)) {
+            $request->session()->regenerate();
+        
             return redirect()->intended('dashboard');
         }
 
@@ -34,7 +36,8 @@ class AuthController extends Controller
 
         $user = User::create($data);
 
-        Auth::login($user);
+        Auth::login();
+        $request->session()->regenerate();
 
         return redirect()->intended('dashboard');
     }
