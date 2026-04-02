@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BillingCycle;
+use App\Models\Category;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,7 +22,8 @@ class SubscriptionController extends Controller
     public function create()
     {
         return inertia('subscriptions/New', [
-            'billingCycles' => BillingCycle::select('id', 'name')->get()
+            'billingCycles' => BillingCycle::select('id', 'name')->get(),
+            'categories' => Category::select('id', 'name')->get()
         ]);
     }
 
