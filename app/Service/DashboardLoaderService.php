@@ -5,13 +5,15 @@ namespace App\Service;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Subscription;
+use Carbon\Carbon;
 
 class DashboardLoaderService
 {
     public function load(): array
     {
+        
         return [
-            'subscriptions' => User::find(Auth::id())->subscriptions()->with('billingCycle')->get()->toArray(),
+            'subscriptions' => User::find(Auth::id())->subscriptions()->where('next_billing_date', '<=', Carbon::now()->addDays(10))->with('billingCycle')->get()->toArray(),
             'totalSubscriptions' => $this->totalSubscriptions(),
             'valueOfSubscriptions' => $this->valueOfSubscriptions(),
         ];
