@@ -21,12 +21,13 @@ class DashboardLoaderService
 
     public function totalSubscriptions(): int
     {
-        return Subscription::count();
+
+        return auth()->user()->subscriptions()->count();
     }
 
     public function valueOfSubscriptions(): float
     {
-        return Subscription::sum('price');
+        return auth()->user()->subscriptions()->sum('price');
     }
 
 
