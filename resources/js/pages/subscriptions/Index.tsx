@@ -89,7 +89,7 @@ export default function Assinaturas() {
                         {filteredSubscriptions.map((subscription) => (
                             <li
                                 key={subscription.id}
-                                className="rounded-lg bg-zinc-800 p-4"
+                                className="rounded bg-zinc-800 p-4"
                             >
                                 <div className="flex items-start justify-between gap-4">
                                     <div className="min-w-0">
@@ -118,8 +118,8 @@ export default function Assinaturas() {
                                 </div>
                                 <div className="mt-4 flex justify-end gap-2 border-t border-zinc-700 pt-3">
                                     <Link
-                                        href={`/subscriptions/edit/${subscription.id}`}
-                                        className="w-full cursor-pointer rounded border border-blue-600 px-3 py-1 text-center text-white transition-colors hover:bg-blue-600"
+                                        href={`/subscriptions/${subscription.id}/edit/`}
+                                        className="w-full cursor-pointer rounded border border-stone-600 px-3 py-1 text-center text-white transition-colors hover:bg-stone-600"
                                     >
                                         Editar
                                     </Link>
@@ -128,7 +128,7 @@ export default function Assinaturas() {
                                         onClick={(e) =>
                                             handleDelete(subscription.id, e)
                                         }
-                                        className="w-full cursor-pointer rounded border border-red-600 px-3 py-1 text-white transition-colors hover:bg-red-600"
+                                        className="w-full cursor-pointer rounded border border-red-600/50 px-3 py-1 text-white transition-colors hover:bg-red-600/50"
                                         disabled={processing}
                                     >
                                         <p>
