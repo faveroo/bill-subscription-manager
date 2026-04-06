@@ -67,12 +67,9 @@ export default function Header() {
             return;
         }
 
-        const timeoutId = window.setTimeout(() => {
-            setToasts(next);
-            setIsVisible(true);
-        }, 0);
+        setToasts((prev) => [...prev, ...next]);
+        setIsVisible(true);
 
-        return () => window.clearTimeout(timeoutId);
     }, [success, error]);
 
     useEffect(() => {
@@ -93,7 +90,7 @@ export default function Header() {
         const timeoutId = window.setTimeout(() => setToasts([]), 200);
 
         return () => window.clearTimeout(timeoutId);
-    }, [isVisible, toasts.length]);
+    }, [isVisible, toasts]);
 
     const dismiss = () => {
         setIsVisible(false);
