@@ -2,14 +2,8 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import type { FormEvent, ReactNode } from 'react';
 import { useMemo } from 'react';
 import { getSubscriptionIcon } from '@/icons/subscriptionIcons';
-import type { BillingCycle } from '@/types/model/billingCycle';
-import type { category } from '@/types/model/category';
+import type { NewSubscriptionPageProps } from '@/types/pages/subscriptions';
 import MainLayout from '../../layouts/MainLayout';
-
-type Props = {
-    billingCycles: BillingCycle[];
-    categories: category[];
-};
 
 function parseIsoDate(value: string) {
     const [year, month, day] = value.split('-').map((part) => Number(part));
@@ -55,7 +49,10 @@ function addBillingCycle(lastBilling: Date, billingCycleName: string) {
     return null;
 }
 
-export default function NewSubscription({ billingCycles, categories }: Props) {
+export default function NewSubscription({
+    billingCycles,
+    categories,
+}: NewSubscriptionPageProps) {
     const { data, setData, post, processing, errors } = useForm({
         name: '',
         price: '',

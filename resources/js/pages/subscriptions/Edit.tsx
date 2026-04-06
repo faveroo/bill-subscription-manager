@@ -1,19 +1,13 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import type { ReactNode } from 'react';
 import { getSubscriptionIcon } from '@/icons/subscriptionIcons';
-import type { BillingCycle } from '@/types/model/billingCycle';
-import type { Subscription } from '@/types/model/subscription';
+import type { EditSubscriptionPageProps } from '@/types/pages/subscriptions';
 import MainLayout from '../../layouts/MainLayout';
-
-type Props = {
-    subscription: Subscription;
-    billingCycles: BillingCycle[];
-};
 
 export default function EditSubscription({
     subscription,
     billingCycles,
-}: Props) {
+}: EditSubscriptionPageProps) {
     const { data, setData, put, processing, errors } = useForm({
         name: subscription.name ?? '',
         price: String(subscription.price ?? ''),
