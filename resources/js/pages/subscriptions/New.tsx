@@ -2,6 +2,7 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import type { FormEvent, ReactNode } from 'react';
 import { useMemo } from 'react';
 import { getSubscriptionIcon } from '@/icons/subscriptionIcons';
+import { cn } from '@/lib/utils';
 import type { NewSubscriptionPageProps } from '@/types/pages/subscriptions';
 import MainLayout from '../../layouts/MainLayout';
 
@@ -61,12 +62,13 @@ export default function NewSubscription({
         last_billing: new Date().toISOString().split('T')[0],
     });
 
-    const inputClass = (hasError: boolean, extraClasses = '') =>
-        `w-full rounded-md bg-zinc-900 border p-2 text-white outline-none transition ${extraClasses} ${
-            hasError
-                ? 'border-red-500/80 ring-1 ring-red-500/30'
-                : 'border-zinc-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
-        }`;
+    const fieldBase =
+        'h-11 w-full rounded-xl bg-zinc-800 px-3 text-white ring-1 ring-white/10 placeholder:text-zinc-400 transition focus:bg-zinc-800 focus:ring-2 focus:ring-white/15 focus:outline-none';
+    const fieldError =
+        'ring-2 ring-rose-500/40 ring-offset-0 focus:ring-2 focus:ring-rose-500/40';
+
+    const fieldClass = (hasError: boolean) =>
+        cn(fieldBase, hasError ? fieldError : null);
 
     const nextBillingPreview = useMemo(() => {
         if (!data.last_billing || !data.billing_cycle_id) {
@@ -103,105 +105,123 @@ export default function NewSubscription({
 
     return (
         <>
-            <Head title="Nova Assinatura" />
+            <Head title="Nova assinatura" />
 
-            <div className="mx-auto w-full max-w-xl space-y-4">
-                <div className="flex items-center justify-between gap-3">
+            <div className="mx-auto w-full max-w-2xl space-y-4 text-zinc-100">
+                <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0">
                         <Link
                             href="/subscriptions"
-                            className="inline-flex items-center rounded border border-zinc-500/70 px-3 py-1 text-sm text-white transition-colors hover:border-zinc-400"
+                            className="inline-flex items-center rounded-xl bg-white/5 px-3 py-1 text-sm text-white ring-1 ring-white/10 transition-colors hover:bg-white/10"
                         >
                             Voltar
                         </Link>
-                        <h1 className="mt-3 truncate text-2xl font-semibold text-white">
+                        <h1 className="mt-3 truncate text-2xl font-semibold tracking-tight text-white">
                             Nova assinatura
                         </h1>
+                        <p className="mt-1 text-sm text-zinc-400">
+                            Adicione nome, preço e ciclo para acompanhar gastos
+                            recorrentes.
+                        </p>
                     </div>
 
-                    <div className="shrink-0 text-white/95 transition-transform duration-200 hover:scale-110">
-                        {getSubscriptionIcon(data.name, {
-                            size: 48,
-                            title: data.name || 'Assinatura',
-                        })}
+                    <div className="shrink-0">
+                        <div className="rounded-xl bg-white/5 p-3 text-zinc-200 ring-1 ring-white/10">
+                            {getSubscriptionIcon(data.name, {
+                                size: 26,
+                                title: data.name || 'Assinatura',
+                            })}
+                        </div>
                     </div>
                 </div>
 
-                <div className="rounded-xl bg-zinc-800 p-6 shadow-lg border border-zinc-700 hover:border-zinc-500 transition">
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <div>
-                            <label className="mb-1 block text-sm font-medium text-white">
-                                Nome
-                            </label>
-                            <input
-                                type="text"
-                                placeholder="Ex: Netflix"
-                                value={data.name}
-                                onChange={(e) =>
-                                    setData('name', e.target.value)
-                                }
-                                className={inputClass(!!errors.name)}
-                            />
-                            {errors.name && (
-                                <p className="mt-1 text-sm text-red-400">
-                                    {errors.name}
-                                </p>
-                            )}
-                        </div>
-
-                        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                            <div>
+                <div className="rounded-xl border border-white/10 bg-zinc-900/35 p-6 shadow-sm shadow-black/30 ring-1 ring-white/5">
+                    <form onSubmit={handleSubmit} className="space-y-5">
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <div className="sm:col-span-2">
                                 <label className="mb-1 block text-sm font-medium text-white">
-                                Preço (R$)
-                            </label>
-                            <input
-                                type="number"
-                                placeholder="Ex: 39.90"
-                                step="0.01"
-                                value={data.price}
-                                onChange={(e) =>
-                                    setData('price', e.target.value)
-                                }
-                                className={inputClass(!!errors.price)}
-                            />
-                            {errors.price && (
-                                <p className="mt-1 text-sm text-red-400">
-                                    {errors.price}
-                                </p>
-                            )}
+                                    Nome
+                                </label>
+                                <input
+                                    type="text"
+                                    placeholder="Ex: Netflix"
+                                    value={data.name}
+                                    onChange={(e) =>
+                                        setData('name', e.target.value)
+                                    }
+                                    className={fieldClass(!!errors.name)}
+                                />
+                                {errors.name ? (
+                                    <p className="mt-1 text-sm text-rose-200">
+                                        {errors.name}
+                                    </p>
+                                ) : (
+                                    <p className="mt-1 text-xs text-zinc-400">
+                                        Use o nome do serviço para encontrar o
+                                        ícone automaticamente.
+                                    </p>
+                                )}
                             </div>
 
                             <div>
                                 <label className="mb-1 block text-sm font-medium text-white">
-                                Categoria
-                            </label>
-                            <select
-                                value={data.category_id}
-                                onChange={(e) =>
-                                    setData(
-                                        'category_id',
-                                        e.target.value,
-                                    )
-                                }
-                                className={inputClass(!!errors.category_id)}
-                            >
-                                <option value="">Selecione</option>
-                                {categories.map((cat) => (
-                                    <option key={cat.id} value={cat.id}>
-                                        {cat.name}
+                                    Preço (R$)
+                                </label>
+                                <input
+                                    type="number"
+                                    inputMode="decimal"
+                                    step="0.01"
+                                    placeholder="0,00"
+                                    value={data.price}
+                                    onChange={(e) =>
+                                        setData('price', e.target.value)
+                                    }
+                                    className={fieldClass(!!errors.price)}
+                                />
+                                {errors.price ? (
+                                    <p className="mt-1 text-sm text-rose-200">
+                                        {errors.price}
+                                    </p>
+                                ) : null}
+                            </div>
+
+                            <div>
+                                <label className="mb-1 block text-sm font-medium text-white">
+                                    Categoria
+                                </label>
+                                <select
+                                    value={data.category_id}
+                                    onChange={(e) =>
+                                        setData('category_id', e.target.value)
+                                    }
+                                    className={cn(
+                                        fieldClass(!!errors.category_id),
+                                        'appearance-none',
+                                    )}
+                                >
+                                    <option
+                                        value=""
+                                        className="bg-zinc-900 text-white"
+                                    >
+                                        Selecione
                                     </option>
-                                ))}
-                            </select>
-                            {errors.category_id && (
-                                <p className="mt-1 text-sm text-red-400">
-                                    {errors.category_id}
-                                </p>
-                            )}
-                        </div>
+                                    {categories.map((cat) => (
+                                        <option
+                                            key={cat.id}
+                                            value={cat.id}
+                                            className="bg-zinc-900 text-white"
+                                        >
+                                            {cat.name}
+                                        </option>
+                                    ))}
+                                </select>
+                                {errors.category_id ? (
+                                    <p className="mt-1 text-sm text-rose-200">
+                                        {errors.category_id}
+                                    </p>
+                                ) : null}
+                            </div>
 
-                        </div>
-
-                        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                             <div>
                                 <label className="mb-1 block text-sm font-medium text-white">
                                     Ciclo de cobrança
@@ -214,23 +234,32 @@ export default function NewSubscription({
                                             e.target.value,
                                         )
                                     }
-                                    className={inputClass(
-                                        !!errors.billing_cycle_id,
-                                        'p-3',
+                                    className={cn(
+                                        fieldClass(!!errors.billing_cycle_id),
+                                        'appearance-none',
                                     )}
                                 >
-                                    <option value="">Selecione</option>
+                                    <option
+                                        value=""
+                                        className="bg-zinc-900 text-white"
+                                    >
+                                        Selecione
+                                    </option>
                                     {billingCycles.map((cycle) => (
-                                        <option key={cycle.id} value={cycle.id}>
+                                        <option
+                                            key={cycle.id}
+                                            value={cycle.id}
+                                            className="bg-zinc-900 text-white"
+                                        >
                                             {cycle.name}
                                         </option>
                                     ))}
                                 </select>
-                                {errors.billing_cycle_id && (
-                                    <p className="mt-1 text-sm text-red-400">
+                                {errors.billing_cycle_id ? (
+                                    <p className="mt-1 text-sm text-rose-200">
                                         {errors.billing_cycle_id}
                                     </p>
-                                )}
+                                ) : null}
                             </div>
 
                             <div>
@@ -243,36 +272,52 @@ export default function NewSubscription({
                                     onChange={(e) =>
                                         setData('last_billing', e.target.value)
                                     }
-                                    className={inputClass(
-                                        !!errors.last_billing,
-                                        'p-2.5',
-                                    )}
+                                    className={fieldClass(!!errors.last_billing)}
                                 />
-                                {errors.last_billing && (
-                                    <p className="mt-1 text-sm text-red-400">
+                                {errors.last_billing ? (
+                                    <p className="mt-1 text-sm text-rose-200">
                                         {errors.last_billing}
                                     </p>
+                                ) : null}
+                            </div>
+
+                            <div className="flex items-end">
+                                {nextBillingPreview ? (
+                                    <div className="inline-flex w-full items-center justify-between rounded-xl bg-white/5 px-3 py-3 ring-1 ring-white/10">
+                                        <div className="text-sm text-zinc-300">
+                                            Próxima cobrança
+                                        </div>
+                                        <div className="text-sm font-semibold text-white">
+                                            {nextBillingPreview}
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="w-full text-xs text-zinc-400">
+                                        Selecione o ciclo para prever a próxima
+                                        cobrança.
+                                    </div>
                                 )}
                             </div>
                         </div>
 
-                        {nextBillingPreview && (
-                            <p className="text-sm text-zinc-400">
-                                Próxima cobrança: {nextBillingPreview}
-                            </p>
-                        )}
+                        <div className="flex flex-col gap-2 border-t border-white/10 pt-4 sm:flex-row sm:justify-end">
+                            <Link
+                                href="/subscriptions"
+                                className="inline-flex w-full items-center justify-center rounded-xl bg-white/5 px-4 py-2 text-sm font-medium text-white ring-1 ring-white/10 transition-colors hover:bg-white/10 sm:w-auto"
+                            >
+                                Cancelar
+                            </Link>
 
-                        <button
-                            type="submit"
-                            disabled={processing}
-                            className="w-full rounded-lg bg-blue-600 py-2 font-medium text-white transition hover:bg-blue-500 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
-                        >
-                            {processing ? (
-                                <span className="animate-pulse">Salvando...</span>
-                            ) : (
-                                'Criar assinatura'
-                            )}
-                        </button>
+                            <button
+                                type="submit"
+                                disabled={processing}
+                                className="inline-flex w-full items-center justify-center rounded-xl bg-sky-500/20 px-4 py-2 text-sm font-medium text-sky-100 ring-1 ring-sky-500/25 transition-colors hover:bg-sky-500/25 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+                            >
+                                {processing
+                                    ? 'Salvando…'
+                                    : 'Criar assinatura'}
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>
