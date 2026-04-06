@@ -35,6 +35,7 @@ class SubscriptionController extends Controller
             'price' => ['required', 'numeric', 'min:0'],
             'billing_cycle_id' => ['required', 'exists:billing_cycles,id'],
             'last_billing' => ['required', 'date'],
+            'category_id' => ['nullable', 'exists:categories,id']
         ]);
 
         /** @var \App\Models\User $user */
