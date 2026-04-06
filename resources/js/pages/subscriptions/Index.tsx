@@ -8,10 +8,12 @@ import MainLayout from '../../layouts/MainLayout';
 export default function Assinaturas() {
     const { props } = usePage<PageProps>();
     const subscriptions = props.subscriptions || [];
+    const categories = props.categories || [];
 
     const [nameFilter, setNameFilter] = useState('');
     const [billingCycleFilter, setBillingCycleFilter] = useState('');
     const [dateFilter, setDateFilter] = useState('');
+    const [categoryFilter, setCategoryFilter] = useState('');
 
     const filteredSubscriptions = subscriptions.filter((sub) => {
         const matchesName = sub.name
@@ -25,8 +27,12 @@ export default function Assinaturas() {
         const matchesDate = dateFilter
             ? sub.next_billing_date === dateFilter
             : true;
+        
+        const matchesCategory = categoryFilter            
+            ? sub.category?.name === categoryFilter
+            : true;
 
-        return matchesName && matchesBillingCycle && matchesDate;
+        return matchesName && matchesBillingCycle && matchesDate && matchesCategory;
     });
 
     const { processing } = useForm();
@@ -84,6 +90,22 @@ export default function Assinaturas() {
                             onChange={(e) => setDateFilter(e.target.value)}
                             className="rounded bg-zinc-800 p-2 text-white"
                         />
+
+                        {/* Categoria */}
+                        <select
+                            value={categoryFilter}
+                            onChange={(e) =>
+                                setCategoryFilter(e.target.value)
+                            }
+                            className="rounded bg-zinc-800 p-2 text-white"
+                        >
+                            <option value="">Todas as categorias</option>
+                            {categories.map((cat) => (
+                                <option key={cat.id} value={cat.name}>
+                                    {cat.name}
+                                </option>
+                            ))}
+                        </select>
                     </div>
                     <ul className="space-y-4">
                         {filteredSubscriptions.map((subscription) => (
