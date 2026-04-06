@@ -15,6 +15,7 @@ class SubscriptionController extends Controller
         /** @var \App\Models\User $user */
         $user = Auth::user();
         $subscriptions = $user->subscriptions()->with('billingCycle', 'category')->get();
+
         return inertia('subscriptions/Index', [
             'subscriptions' => $subscriptions,
             'categories' => Category::select('id', 'name')->get()
@@ -35,7 +36,7 @@ class SubscriptionController extends Controller
             'price' => ['required', 'numeric', 'min:0'],
             'billing_cycle_id' => ['required', 'exists:billing_cycles,id'],
             'last_billing' => ['required', 'date'],
-            'category_id' => ['nullable', 'exists:categories,id']
+            'category_id' => ['required', 'exists:categories,id']
         ]);
 
         /** @var \App\Models\User $user */
@@ -48,7 +49,8 @@ class SubscriptionController extends Controller
     {
             /** @var \App\Models\User $user */
             $user = Auth::user();
-            $subscription = $user->subscriptions()->with('billingCycle')->findOrFail($id);
+            $subscription = $user->subscriptions()->with('billingCycle', 'category')->findOrFail($id);
+
             return inertia('subscriptions/Subscription', [
                 'subscription' => $subscription
             ]);
@@ -73,6 +75,7 @@ class SubscriptionController extends Controller
             'price' => ['required', 'numeric', 'min:0'],
             'billing_cycle_id' => ['required', 'exists:billing_cycles,id'],
             'last_billing' => ['required', 'date'],
+            'category_id' => ['required', 'exists:categories,id']
         ]);
 
         /** @var \App\Models\User $user */
