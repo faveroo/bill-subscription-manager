@@ -14,9 +14,10 @@ class SubscriptionController extends Controller
     {   
         /** @var \App\Models\User $user */
         $user = Auth::user();
-        $subscriptions = $user->subscriptions()->with('billingCycle')->get();
+        $subscriptions = $user->subscriptions()->with('billingCycle', 'category')->get();
         return inertia('subscriptions/Index', [
-            'subscriptions' => $subscriptions
+            'subscriptions' => $subscriptions,
+            'categories' => Category::select('id', 'name')->get()
         ]);
     }
     public function create()
