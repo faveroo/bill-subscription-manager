@@ -48,7 +48,7 @@ export default function DashboardPage() {
         .filter((d): d is Date => Boolean(d))
         .filter((d) => d < today);
 
-    const activeCount = subscriptions.length || props.totalSubscriptions || 0;
+    const activeCount = props.totalSubscriptions || 0;
     const totalMonthly = props.valueOfSubscriptions ?? 0;
     const overdueCount = overdue.length;
 
@@ -106,7 +106,7 @@ export default function DashboardPage() {
                 <MetricCard
                     label="Vencidas"
                     value={String(overdueCount)}
-                    helper="Baseado em next_billing_date"
+                    helper="Assinaturas vencidas"
                     icon={<IconAlert className="h-5 w-5" />}
                     accent="rose"
                 />
