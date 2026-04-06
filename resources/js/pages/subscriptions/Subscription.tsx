@@ -37,7 +37,7 @@ export default function SubscriptionInfo() {
         <>
             <Head title={`Assinatura • ${subscription.name}`} />
 
-            <div className="mx-auto w-full max-w-4xl space-y-6">
+            <div className="mx-auto w-full max-w-4xl space-y-4">
                 <div className="flex items-center justify-between gap-3">
                     <div className="min-w-0">
                         <div className="flex items-center gap-3">
@@ -49,9 +49,18 @@ export default function SubscriptionInfo() {
                             </Link>
                         </div>
 
-                        <h1 className="mt-3 truncate text-3xl font-bold text-white">
+                        <div className="inline-flex items-center gap-5 mt-2">
+                        <h1 className="mt-2 truncate text-3xl font-bold text-white">
                             {subscription.name}
                         </h1>
+                            <div className="mt-2">
+                                {subscription.category?.name ? (
+                                    <span className="items-center rounded-full bg-zinc-800/20 px-2.5 py-1 text-xs text-zinc-200 ring-1 ring-white/10">
+                                        {subscription.category.name}
+                                    </span>
+                                ) : null}
+                            </div>
+                        </div>
                     </div>
 
                     <div className="shrink-0 text-white/95">
@@ -62,7 +71,7 @@ export default function SubscriptionInfo() {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                     <div className="rounded-xl border border-zinc-700 bg-zinc-800 p-4">
                         <p className="text-sm text-zinc-300">Preço</p>
                         <p className="mt-1 text-2xl font-semibold text-white">
