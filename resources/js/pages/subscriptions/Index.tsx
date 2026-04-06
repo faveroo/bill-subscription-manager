@@ -90,11 +90,23 @@ export default function Assinaturas() {
                             onChange={(e) =>
                                 setBillingCycleFilter(e.target.value)
                             }
-                            className="h-11 rounded-xl bg-zinc-800 px-3 text-white ring-1 ring-white/10 focus:ring-2 focus:ring-white/15 focus:outline-none"
+                            className="h-11 appearance-none rounded-xl bg-zinc-800 px-3 text-white ring-1 ring-white/10 focus:ring-2 focus:ring-white/15 focus:outline-none"
                         >
-                            <option value="">Todos</option>
-                            <option value="Mensal">Mensal</option>
-                            <option value="Anual">Anual</option>
+                            <option value="" className="bg-zinc-900 text-white">
+                                Todos
+                            </option>
+                            <option
+                                value="Mensal"
+                                className="bg-zinc-900 text-white"
+                            >
+                                Mensal
+                            </option>
+                            <option
+                                value="Anual"
+                                className="bg-zinc-900 text-white"
+                            >
+                                Anual
+                            </option>
                         </select>
 
                         <input
@@ -109,11 +121,17 @@ export default function Assinaturas() {
                             onChange={(e) =>
                                 setCategoryFilter(e.target.value)
                             }
-                            className="h-11 rounded-xl bg-zinc-800 px-3 text-white ring-1 ring-white/10 focus:ring-2 focus:ring-white/15 focus:outline-none"
+                            className="h-11 appearance-none rounded-xl bg-zinc-800 px-3 text-white ring-1 ring-white/10 focus:ring-2 focus:ring-white/15 focus:outline-none"
                         >
-                            <option value="">Todas as categorias</option>
+                            <option value="" className="bg-zinc-900 text-white">
+                                Todas as categorias
+                            </option>
                             {categories.map((cat) => (
-                                <option key={cat.id} value={cat.name}>
+                                <option
+                                    key={cat.id}
+                                    value={cat.name}
+                                    className="bg-zinc-900 text-white"
+                                >
                                     {cat.name}
                                 </option>
                             ))}
