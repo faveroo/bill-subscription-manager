@@ -3,10 +3,12 @@ import type { FormEvent, ReactNode } from 'react';
 import { useMemo } from 'react';
 import { getSubscriptionIcon } from '@/icons/subscriptionIcons';
 import type { BillingCycle } from '@/types/model/billingCycle';
+import type { category } from '@/types/model/category';
 import MainLayout from '../../layouts/MainLayout';
 
 type Props = {
     billingCycles: BillingCycle[];
+    categories: category[];
 };
 
 function parseIsoDate(value: string) {
@@ -53,11 +55,12 @@ function addBillingCycle(lastBilling: Date, billingCycleName: string) {
     return null;
 }
 
-export default function NewSubscription({ billingCycles }: Props) {
+export default function NewSubscription({ billingCycles, categories }: Props) {
     const { data, setData, post, processing, errors } = useForm({
         name: '',
         price: '',
         billing_cycle_id: '',
+        category_id: '',
         last_billing: new Date().toISOString().split('T')[0],
     });
 
@@ -149,8 +152,9 @@ export default function NewSubscription({ billingCycles }: Props) {
                             )}
                         </div>
 
-                        <div>
-                            <label className="mb-1 block text-sm font-medium text-white">
+                        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                            <div>
+                                <label className="mb-1 block text-sm font-medium text-white">
                                 Preço (R$)
                             </label>
                             <input
@@ -168,6 +172,36 @@ export default function NewSubscription({ billingCycles }: Props) {
                                     {errors.price}
                                 </p>
                             )}
+                            </div>
+
+                            <div>
+                                <label className="mb-1 block text-sm font-medium text-white">
+                                Categoria
+                            </label>
+                            <select
+                                value={data.category_id}
+                                onChange={(e) =>
+                                    setData(
+                                        'category_id',
+                                        e.target.value,
+                                    )
+                                }
+                                className={inputClass(!!errors.category_id)}
+                            >
+                                <option value="">Selecione</option>
+                                {categories.map((cat) => (
+                                    <option key={cat.id} value={cat.id}>
+                                        {cat.name}
+                                    </option>
+                                ))}
+                            </select>
+                            {errors.category_id && (
+                                <p className="mt-1 text-sm text-red-400">
+                                    {errors.category_id}
+                                </p>
+                            )}
+                        </div>
+
                         </div>
 
                         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
