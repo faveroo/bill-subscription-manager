@@ -49,7 +49,13 @@ class SubscriptionController extends Controller
     {
             /** @var \App\Models\User $user */
             $user = Auth::user();
-            $subscription = $user->subscriptions()->with('billingCycle', 'category')->findOrFail($id);
+            $subscription = $user->subscriptions()->with('billingCycle', 'category')->find($id);
+
+            if (!$subscription) {
+                return redirect()
+                    ->route('subscriptions.index')
+                    ->with('error', 'Assinatura não encontrada.');
+            }
 
             return inertia('subscriptions/Subscription', [
                 'subscription' => $subscription
