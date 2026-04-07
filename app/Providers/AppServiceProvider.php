@@ -29,6 +29,11 @@ class AppServiceProvider extends ServiceProvider
             'auth' => [
                 'user' => fn() => Auth::user(),
             ],
+            'notifications' => fn() => [
+                'unreadCount' => Auth::check()
+                    ? Auth::user()->unreadNotifications()->count()
+                    : 0,
+            ],
         ]);
 
         $this->configureDefaults();
