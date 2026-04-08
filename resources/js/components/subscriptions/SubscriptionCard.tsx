@@ -22,7 +22,7 @@ export type SubscriptionCardProps = {
     priceLabel: string;
     nextBillingLabel: string;
     processing?: boolean;
-    onDelete: (subscriptionId: number) => void;
+    handler: (subscription: Subscription) => void;
     className?: string;
 };
 
@@ -31,9 +31,18 @@ export default function SubscriptionCard({
     priceLabel,
     nextBillingLabel,
     processing,
-    onDelete,
+    handler,
     className,
 }: SubscriptionCardProps) {
+    const toggleLabel = subscription.is_active ? 'Inativar' : 'Ativar';
+    const toggleProcessingLabel = subscription.is_active
+        ? 'Inativando…'
+        : 'Ativando…';
+
+    const toggleButtonClassName = subscription.is_active
+        ? 'bg-rose-500/10 text-rose-100 ring-rose-500/25 hover:bg-rose-500/15'
+        : 'bg-emerald-500/10 text-emerald-100 ring-emerald-500/25 hover:bg-emerald-500/15';
+
     const icon = getSubscriptionIcon(subscription.name, {
         size: 22,
         title: subscription.name,
@@ -95,6 +104,19 @@ export default function SubscriptionCard({
             </div>
 
             <div className="mt-4 flex flex-col gap-2 border-t border-white/10 pt-3 sm:flex-row sm:justify-end">
+                <div className="flex items-center gap-2 text-sm justify-start ml-2 mr-auto">
+                    {subscription.is_active ? (
+                        <span className="inline-flex items-center rounded-xl bg-green-500/10 px-2.5 py-1 text-green-100 ring-1 ring-green-500/25">
+                            Ativa
+                        </span>
+                    ) : (
+                        <span className="inline-flex items-center rounded-xl bg-red-500/10 px-2.5 py-1 text-red-100 ring-1 ring-red-500/25">
+                            Inativa
+                        </span>
+                    )}
+                </div>
+
+
                 <Link
                     href={`/subscriptions/${subscription.id}/edit/`}
                     className="inline-flex w-full items-center justify-center rounded-lg bg-white/5 px-3 py-2 text-sm font-medium text-white ring-1 ring-white/10 transition-colors hover:bg-white/10 sm:w-auto"
@@ -104,14 +126,16 @@ export default function SubscriptionCard({
 
                 <button
                     type="button"
-                    onClick={() => onDelete(subscription.id)}
-                    className="inline-flex w-full items-center justify-center rounded-lg bg-rose-500/10 px-3 py-2 text-sm font-medium text-rose-100 ring-1 ring-rose-500/25 transition-colors hover:bg-rose-500/15 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+                    onClick={() => handler(subscription)}
+                    className={cn(
+                        'inline-flex w-full items-center justify-center rounded-lg px-3 py-2 text-sm font-medium ring-1 transition-colors disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto',
+                        toggleButtonClassName,
+                    )}
                     disabled={processing}
                 >
-                    {processing ? 'Excluindo…' : 'Excluir'}
+                    {processing ? toggleProcessingLabel : toggleLabel}
                 </button>
             </div>
         </li>
     );
 }
-

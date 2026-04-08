@@ -12,7 +12,9 @@ function formatCurrencyBRL(value: number) {
 }
 
 function formatDateBR(value?: string) {
-    if (!value) return '—';
+    if (!value) {
+        return '—';
+    }
 
     const [year, month, day] = value.split('-');
 
@@ -28,9 +30,18 @@ export default function SubscriptionInfo() {
     const subscription = props.subscription;
     const billingCycleName = subscription.billing_cycle?.name ?? '—';
 
-    function handleDelete() {
-        if (!confirm('Tem certeza que deseja excluir esta assinatura?')) return;
-        router.delete(`/subscription/${subscription.id}`);
+    function handleToggleActive() {
+        const nextActionLabel = subscription.is_active ? 'inativar' : 'ativar';
+
+        if (
+            !confirm(
+                `Tem certeza que deseja ${nextActionLabel} esta assinatura?`,
+            )
+        ) {
+            return;
+        }
+
+        router.patch(`/subscriptions/${subscription.id}/toggle-active`);
     }
 
     return (
@@ -118,10 +129,12 @@ export default function SubscriptionInfo() {
 
                             <button
                                 type="button"
-                                onClick={handleDelete}
-                                className="rounded border border-red-600 px-4 py-2 text-sm text-white transition-colors hover:bg-red-600"
+                                onClick={handleToggleActive}
+                                className={`rounded border px-4 py-2 text-sm text-white transition-colors ${subscription.is_active ? 'hover:bg-red-600 border-red-600' : 'hover:bg-green-600 border-green-600'}`}
                             >
-                                Excluir assinatura
+                                {subscription.is_active
+                                    ? 'Inativar assinatura'
+                                    : 'Ativar assinatura'}
                             </button>
                         </div>
                     </div>

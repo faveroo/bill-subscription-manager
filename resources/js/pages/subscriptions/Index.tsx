@@ -2,6 +2,7 @@ import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
 import type { ReactNode } from 'react';
 import { useMemo, useState } from 'react';
 import SubscriptionCard from '@/components/subscriptions/SubscriptionCard';
+import type { Subscription } from '@/types/model/subscription';
 import type { PageProps } from '@/types/pages/subscriptions';
 import MainLayout from '../../layouts/MainLayout';
 
@@ -48,12 +49,18 @@ export default function Assinaturas() {
 
     const { processing } = useForm({});
 
-    function handleDelete(id: number) {
-        if (!confirm('Tem certeza que deseja excluir?')) {
+    function handleToggleActive(subscription: Subscription) {
+        const nextActionLabel = subscription.is_active ? 'inativar' : 'ativar';
+
+        if (
+            !confirm(
+                `Tem certeza que deseja ${nextActionLabel} esta assinatura?`,
+            )
+        ) {
             return;
         }
 
-        router.delete(`/subscription/${id}`);
+        router.patch(`/subscriptions/${subscription.id}/toggle-active`);
     }
 
     return (
@@ -153,7 +160,7 @@ export default function Assinaturas() {
                                         subscription.next_billing_date
                                     }
                                     processing={processing}
-                                    onDelete={handleDelete}
+                                    handler={handleToggleActive}
                                 />
                             ))}
                         </ul>
