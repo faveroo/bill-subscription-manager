@@ -14,13 +14,12 @@ class CheckExpiringSubscriptions extends Command
 
     public function handle()
     {
-        $daysBefore = [7, 3, 1]; // múltiplos lembretes
+        $daysBefore = [7, 3, 1, 0]; // múltiplos lembretes
+        $this->info('Verificando assinaturas próximas do vencimento...');
 
         foreach ($daysBefore as $days) {
-            $targetDate = Carbon::now()->addDays($days)->toDateString();
-
             Subscription::with('user')
-                ->whereDate('next_billing_date', today())
+                ->whereDate('next_billing_date', today()->addDays($days))
                 ->chunkById(100, function ($subscriptions) use ($days) {
                     foreach ($subscriptions as $subscription) {
                         $user = $subscription->user;

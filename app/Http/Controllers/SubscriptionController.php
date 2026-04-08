@@ -6,7 +6,9 @@ use App\Models\BillingCycle;
 use App\Models\Category;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schedule;
 
 class SubscriptionController extends Controller
 {   
@@ -66,10 +68,11 @@ class SubscriptionController extends Controller
     {
             /** @var \App\Models\User $user */
             $user = Auth::user();
-            $subscription = $user->subscriptions()->with('billingCycle')->findOrFail($id);
+            $subscription = $user->subscriptions()->with('billingCycle', 'category')->findOrFail($id);
 
             return inertia('subscriptions/Edit', [
                 'subscription' => $subscription,
+                'categories' => Category::select('id', 'name')->get(),
                 'billingCycles' => BillingCycle::select('id', 'name')->get()
             ]);
     }
@@ -81,14 +84,21 @@ class SubscriptionController extends Controller
             'price' => ['required', 'numeric', 'min:0'],
             'billing_cycle_id' => ['required', 'exists:billing_cycles,id'],
             'last_billing' => ['required', 'date'],
-            'category_id' => ['exists:categories,id']
+            'category_id' => ['required','exists:categories,id']
         ]);
 
-        /** @var \App\Models\User $user */
-        $user = Auth::user();
-        $subscription = $user->subscriptions()->findOrFail($id);
+        if(!$request->user()->subscriptions()->whereKey($id)->exists()) {
+            return redirect()->back()->withErrors(['error' => 'Assinatura não encontrada']);
+        }
+
+        $subscription = $request->user()->subscriptions()->find($id);
+        $previousLastBilling = optional($subscription->last_billing)->toDateString();
+
         $subscription->update($data);
 
+        if ($data['last_billing'] !== $previousLastBilling) {
+            Artisan::call('subscriptions:check-expiring');
+        }
         return redirect()->route('subscriptions.show', $subscription->id)->with('success', 'Assinatura atualizada com sucesso!');
     }
 
