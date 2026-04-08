@@ -6,11 +6,17 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
-#[Fillable(['subscription_id', 'user_id', 'name', 'price', 'category_id', 'next_billing_date', 'billing_cycle_id', 'last_billing'])]
+#[Fillable(['subscription_id', 'user_id', 'name', 'price', 'category_id', 'next_billing_date', 'billing_cycle_id', 'last_billing', 'is_active', 'notified_at'])]
 class Subscription extends Model
 {
+    public function casts(): array
+    {
+        return [
+            'is_active' => 'boolean',
+        ];
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
