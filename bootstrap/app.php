@@ -23,9 +23,14 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->render(function (ThrottleRequestsException $e, $request) {
 
         $seconds = $e->getHeaders()['Retry-After'] ?? 60;
+        $status = in_array($request->method(), ['GET', 'HEAD'], true) ? 302 : 303;
 
-        return back()->withErrors([
-            'error' => "Muitas tentativas. Tente novamente em {$seconds} segundos."
-        ]);
+        $message = "Muitas tentativas. Tente novamente em {$seconds} segundos.";
+
+        return back($status)
+            ->with('error', $message)
+            ->withErrors([
+                'error' => $message,
+            ]);
     });
     })->create();
