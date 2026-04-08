@@ -30,9 +30,15 @@ class AuthController extends Controller
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => ['required', 'string', 'email', 'max:255'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
+
+        if(User::where('email', $data['email'])->exists()) {
+            return back()->withErrors([
+                'error' => 'An error occurred while creating your account. Please try again.',
+            ]);
+        }
 
         $user = User::create($data);
 
