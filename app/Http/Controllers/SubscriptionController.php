@@ -81,7 +81,7 @@ class SubscriptionController extends Controller
             'price' => ['required', 'numeric', 'min:0'],
             'billing_cycle_id' => ['required', 'exists:billing_cycles,id'],
             'last_billing' => ['required', 'date'],
-            'category_id' => ['required', 'exists:categories,id']
+            'category_id' => ['exists:categories,id']
         ]);
 
         /** @var \App\Models\User $user */
@@ -92,16 +92,23 @@ class SubscriptionController extends Controller
         return redirect()->route('subscriptions.show', $subscription->id)->with('success', 'Assinatura atualizada com sucesso!');
     }
 
-    public function destroy($id)
+    public function toggleActive($id)
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
-        $sub = $user->subscriptions()->find($id);
-        
-        if(!$sub) return redirect()->back()->withErrors('error', 'Erro ao deletar assinatura');
+        $subscription = $user->subscriptions()->whereKey($id)->first();
 
-        $sub->delete();
+        if (!$subscription) {
+            return redirect()->back()->withErrors(['error' => 'Assinatura não encontrada']);
+        }
 
-        return redirect()->route('subscriptions.index')->with('success', 'Assinatura deletada com sucesso!');
+        $subscription->update(['is_active' => !$subscription->is_active]);
+
+        return redirect()->back()->with(
+            'success',
+            $subscription->is_active
+                ? 'Assinatura ativada com sucesso!'
+                : 'Assinatura inativada com sucesso!',
+        );
     }
 }
