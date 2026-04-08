@@ -13,6 +13,7 @@ export type SubscriptionInfoProps = PageProps & {
 
 export type EditSubscriptionPageProps = {
     subscription: Subscription;
+    categories: category[];
     billingCycles: BillingCycle[];
 };
 

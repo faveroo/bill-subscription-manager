@@ -6,7 +6,7 @@ export type Subscription = {
     name: string;
     price: number;
     is_active: boolean;
-    last_billing?: string;
+    last_billing?: string | Date;
     next_billing_date: string;
     billing_cycle?: BillingCycle;
     category?: category
