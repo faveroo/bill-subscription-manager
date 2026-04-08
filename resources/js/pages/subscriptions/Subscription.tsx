@@ -77,6 +77,17 @@ export default function SubscriptionInfo() {
               timeZone: 'America/Sao_Paulo',
           }).format(lastBillingDate)
         : '';
+    const nextBillingDate = parseDateOnlyToUtcNoon(subscription.next_billing_date);
+    const formattedNextBilling = nextBillingDate
+        ? new Intl.DateTimeFormat('pt-BR', {
+              weekday: 'short',
+              day: '2-digit',
+              month: 'long',
+              year: 'numeric',
+              timeZone: 'America/Sao_Paulo',
+          }).format(nextBillingDate)
+        : '';
+
     const billingCycleName = subscription.billing_cycle?.name ?? '—';
 
     function handleToggleActive() {
@@ -144,7 +155,7 @@ export default function SubscriptionInfo() {
                             Próxima cobrança
                         </p>
                         <p className="mt-1 text-2xl font-semibold text-white">
-                            {formatDateBR(subscription.next_billing_date)}
+                            {formattedNextBilling}
                         </p>
                     </div>
 
