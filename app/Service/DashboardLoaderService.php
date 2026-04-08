@@ -22,12 +22,12 @@ class DashboardLoaderService
     public function totalSubscriptions(): int
     {
 
-        return auth()->user()->subscriptions()->count();
+        return auth()->user()->subscriptions()->where('is_active', true)->count();
     }
 
     public function valueOfSubscriptions(): float
     {
-        return auth()->user()->subscriptions()->sum('price');
+        return auth()->user()->subscriptions()->where('is_active', true)->sum('price');
     }
 
 
