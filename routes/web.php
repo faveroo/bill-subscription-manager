@@ -26,7 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/subscriptions/new', [SubscriptionController::class, 'create'])->name('subscriptions.new');
     Route::get('/subscriptions/{id}', [SubscriptionController::class, 'show'])->name('subscriptions.show');
     Route::put('/subscriptions/{id}', [SubscriptionController::class, 'update'])->name('subscriptions.update');
-    Route::delete('subscription/{id}', [SubscriptionController::class, 'destroy'])->name('subscription.destroy');
+    Route::patch('/subscriptions/{id}/toggle-active', [SubscriptionController::class, 'toggleActive'])->name('subscriptions.toggleActive');
     Route::get('/subscriptions/{id}/edit', [SubscriptionController::class, 'edit'])->name('subscriptions.edit');
 
     Route::inertia('/categories', 'categories/Index')->name('categories.index');
