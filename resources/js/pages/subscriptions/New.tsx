@@ -50,6 +50,12 @@ function addBillingCycle(lastBilling: Date, billingCycleName: string) {
     return null;
 }
 
+function getTodayIsoDateInSaoPaulo() {
+    return new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'America/Sao_Paulo',
+    }).format(new Date());
+}
+
 export default function NewSubscription({
     billingCycles,
     categories,
@@ -59,7 +65,7 @@ export default function NewSubscription({
         price: '',
         billing_cycle_id: '',
         category_id: '',
-        last_billing: new Date().toISOString().split('T')[0],
+        last_billing: getTodayIsoDateInSaoPaulo(),
     });
 
     const fieldBase =

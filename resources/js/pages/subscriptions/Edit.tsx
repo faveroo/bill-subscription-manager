@@ -7,13 +7,55 @@ import MainLayout from '../../layouts/MainLayout';
 
 export default function EditSubscription({
     subscription,
+    categories,
     billingCycles,
 }: EditSubscriptionPageProps) {
+    function pad2(value: number) {
+        return String(value).padStart(2, '0');
+    }
+
+    function toDateInputValue(value?: string | Date) {
+        if (!value) {
+            return '';
+        }
+
+        if (value instanceof Date && !Number.isNaN(value.getTime())) {
+            return `${value.getFullYear()}-${pad2(value.getMonth() + 1)}-${pad2(value.getDate())}`;
+        }
+
+        if (typeof value === 'string') {
+            if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+                return value;
+            }
+
+            const isoPrefix = value.match(/^(\d{4}-\d{2}-\d{2})/);
+
+            if (isoPrefix) {
+                return isoPrefix[1];
+            }
+
+            const br = value.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+
+            if (br) {
+                return `${br[3]}-${br[2]}-${br[1]}`;
+            }
+
+            const parsed = new Date(value);
+
+            if (!Number.isNaN(parsed.getTime())) {
+                return `${parsed.getUTCFullYear()}-${pad2(parsed.getUTCMonth() + 1)}-${pad2(parsed.getUTCDate())}`;
+            }
+        }
+
+        return '';
+    }
+
     const { data, setData, put, processing, errors } = useForm({
         name: subscription.name ?? '',
         price: String(subscription.price ?? ''),
+        category_id: String(subscription.category?.id ?? ''),
         billing_cycle_id: String(subscription.billing_cycle?.id ?? ''),
-        last_billing: subscription.last_billing ?? '',
+        last_billing: toDateInputValue(subscription.last_billing),
     });
 
     const fieldBase =
@@ -100,6 +142,43 @@ export default function EditSubscription({
                                 {errors.price ? (
                                     <p className="mt-1 text-sm text-rose-200">
                                         {errors.price}
+                                    </p>
+                                ) : null}
+                            </div>
+
+                            <div>
+                                <label className="mb-1 block text-sm font-medium text-white">
+                                    Categoria
+                                </label>
+                                <select
+                                    value={data.category_id}
+                                    onChange={(e) =>
+                                        setData('category_id', e.target.value)
+                                    }
+                                    className={cn(
+                                        fieldClass(!!errors.category_id),
+                                        'appearance-none',
+                                    )}
+                                >
+                                    <option
+                                        value=""
+                                        className="bg-zinc-900 text-white"
+                                    >
+                                        Selecione
+                                    </option>
+                                    {categories.map((cat) => (
+                                        <option
+                                            key={cat.id}
+                                            value={cat.id}
+                                            className="bg-zinc-900 text-white"
+                                        >
+                                            {cat.name}
+                                        </option>
+                                    ))}
+                                </select>
+                                {errors.category_id ? (
+                                    <p className="mt-1 text-sm text-rose-200">
+                                        {errors.category_id}
                                     </p>
                                 ) : null}
                             </div>

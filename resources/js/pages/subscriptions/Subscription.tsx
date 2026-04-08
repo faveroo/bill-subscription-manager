@@ -25,9 +25,58 @@ function formatDateBR(value?: string) {
     return `${day}/${month}/${year}`;
 }
 
+function parseDateOnlyToUtcNoon(value?: string | Date) {
+    if (!value) {
+        return null;
+    }
+
+    if (value instanceof Date && !Number.isNaN(value.getTime())) {
+        return new Date(
+            Date.UTC(
+                value.getFullYear(),
+                value.getMonth(),
+                value.getDate(),
+                12,
+                0,
+                0,
+            ),
+        );
+    }
+
+    if (typeof value !== 'string') {
+        return null;
+    }
+
+    const isoPrefix = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
+
+    if (!isoPrefix) {
+        return null;
+    }
+
+    const year = Number(isoPrefix[1]);
+    const month = Number(isoPrefix[2]);
+    const day = Number(isoPrefix[3]);
+
+    if (!year || !month || !day) {
+        return null;
+    }
+
+    return new Date(Date.UTC(year, month - 1, day, 12, 0, 0));
+}
+
 export default function SubscriptionInfo() {
     const { props } = usePage<SubscriptionInfoProps>();
     const subscription = props.subscription;
+    const lastBillingDate = parseDateOnlyToUtcNoon(subscription.last_billing);
+    const formatted = lastBillingDate
+        ? new Intl.DateTimeFormat('pt-BR', {
+              weekday: 'short',
+              day: '2-digit',
+              month: 'long',
+              year: 'numeric',
+              timeZone: 'America/Sao_Paulo',
+          }).format(lastBillingDate)
+        : '';
     const billingCycleName = subscription.billing_cycle?.name ?? '—';
 
     function handleToggleActive() {
@@ -102,7 +151,7 @@ export default function SubscriptionInfo() {
                     <div className="rounded-xl border border-zinc-700 bg-zinc-800 p-4">
                         <p className="text-sm text-zinc-300">Última cobrança</p>
                         <p className="mt-1 text-xl font-semibold text-white">
-                            {formatDateBR(subscription.last_billing)}
+                            {formatted}
                         </p>
                     </div>
 
