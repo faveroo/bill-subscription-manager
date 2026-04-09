@@ -7,7 +7,7 @@ Aplicação para gerenciar assinaturas e despesas recorrentes, com lembretes de 
 - Laravel 13 (PHP 8.3+)
 - Inertia.js + React
 - Vite + TailwindCSS
-- SQLite (padrão), filas/notifications/sessions em banco (`QUEUE_CONNECTION=database`, `SESSION_DRIVER=database`)
+- MySQL, filas/notifications/sessions em banco (`QUEUE_CONNECTION=database`, `SESSION_DRIVER=database`)
 
 ## Funcionalidades
 
