@@ -1,72 +1,94 @@
-# Bill / Subscription Manager
+# 💸 Bill Subscription Manager
 
-Aplicação para gerenciar assinaturas e despesas recorrentes, com lembretes de vencimento.
+Um sistema web para gerenciamento de assinaturas e despesas recorrentes, permitindo acompanhar cobranças, organizar serviços ativos e manter controle financeiro de forma simples e eficiente.
 
-## Stack
+---
 
-- Laravel 13 (PHP 8.3+)
-- Inertia.js + React
-- Vite + TailwindCSS
-- SQLite (padrão), filas/notifications/sessions em banco (`QUEUE_CONNECTION=database`, `SESSION_DRIVER=database`)
+## ✨ Funcionalidades
 
-## Funcionalidades
+* 📌 Cadastro de assinaturas (Netflix, Spotify, etc.)
+* 📅 Controle de datas de cobrança
+* 💰 Registro de valores e periodicidade
+* 🔄 Atualização automática da próxima cobrança
+* 📊 Visualização organizada das assinaturas
+* 🔔 Sistema de feedback com notificações (flash messages)
+* 🔐 Autenticação de usuários
+* 🧾 Separação de dados por usuário
 
-- Autenticação (login/cadastro)
-- CRUD de assinaturas (com categoria e ciclo de cobrança)
-- Ativar/inativar assinatura
-- Notificações de vencimento (canais: **mail** e **database**, via fila)
+---
 
-## Requisitos
+## 🚀 Tecnologias utilizadas
 
-- PHP 8.3+
-- Composer
-- Node.js + npm
+### Backend
 
-## Instalação
+* **Laravel** — Framework PHP robusto e elegante
+* **Eloquent ORM** — Manipulação de banco de dados
+* **Migrations & Seeders**
 
-1. Instale dependências:
-   - `composer install`
-   - `npm install`
-2. Configure o ambiente:
-   - `copy .env.example .env`
-   - `php artisan key:generate`
-3. Banco de dados (SQLite):
-   - Rode migrations: `php artisan migrate`
-   - Popule categorias padrão: `php artisan db:seed`
+### Frontend
 
-Atalho (faz setup + build):
-- `composer run setup` (não roda seed)
+* **React + Inertia.js** — SPA sem complexidade de API separada
+* **TypeScript**
+* **TailwindCSS** — Estilização moderna e responsiva
 
-## Rodando em desenvolvimento
+### Outras ferramentas
 
-- `composer run dev`
+* **Vite**
+* **Ziggy** — Rotas Laravel no frontend
+* **ESLint + Prettier**
 
-Esse comando sobe, em paralelo:
-- `php artisan serve`
-- `php artisan queue:listen --tries=1`
-- `npm run dev`
+---
 
-## Lembretes de vencimento (Scheduler)
+## 🧠 Conceitos aplicados
 
-O agendamento está em `routes/console.php` e executa o comando `subscriptions:check-expiring` diariamente às **08:27**.
+* Arquitetura MVC
+* Separação de responsabilidades
+* Gerenciamento de estado no frontend
+* Boas práticas com formulários e validação
+* Controle de datas e recorrência
+* Rate limiting (tratamento de múltiplas requisições)
+* Uso de Resources para padronização de dados
 
-Para testar manualmente:
-- `php artisan subscriptions:check-expiring`
+---
 
-Para rodar o scheduler localmente:
-- `php artisan schedule:work`
+## 📁 Estrutura do projeto
 
-Em produção, configure um cron para chamar o scheduler a cada minuto (exemplo):
-- `* * * * * php /caminho/do/projeto/artisan schedule:run >> /dev/null 2>&1`
+```
+├── app/
+├── bootstrap/
+├── config/
+├── database/
+├── resources/
+│   ├── js/
+│   └── views/
+├── routes/
+└── public/
+```
 
-Como as notificações são enfileiradas, mantenha um worker de fila rodando (ex.: `php artisan queue:work`).
+---
 
-## Qualidade e testes
+## 🎯 Objetivo do projeto
 
-- PHP (Pint): `composer run lint` / `composer run lint:check`
-- JS/TS: `npm run lint` / `npm run types:check`
-- Testes: `composer test`
+Este projeto foi desenvolvido com o objetivo de:
 
-## Licença
+* Praticar desenvolvimento fullstack com Laravel + React
+* Criar uma aplicação real para controle financeiro pessoal
+* Aplicar boas práticas de organização e código limpo
+* Servir como projeto de portfólio
 
-MIT
+---
+
+## 🔮 Possíveis melhorias
+
+* 📈 Dashboard com gráficos financeiros
+* 📲 Notificações por e-mail
+* 📅 Integração com calendário
+* 💳 Controle de formas de pagamento
+* 📱 Responsividade aprimorada
+
+---
+
+## 👨‍💻 Autor
+
+**Gabriel Favero Hoffmann**
+🔗 https://github.com/faveroo
