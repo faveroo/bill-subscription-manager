@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Service;
+namespace App\Services;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Subscription;
 use Carbon\Carbon;
 
 class DashboardLoaderService
