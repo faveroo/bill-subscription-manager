@@ -2,10 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Subscription;
-use App\Notifications\SubscriptionExpiring;
-use App\Service\CheckExpiringSubscriptionService;
-use Carbon\Carbon;
+use App\Services\CheckExpiringSubscriptionService;
 use Illuminate\Console\Command;
 
 class CheckExpiringSubscriptions extends Command
