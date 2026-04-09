@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\BillingCycle;
 use App\Models\Category;
 use App\Models\Subscription;
+use App\Notifications\SubscriptionExpiring;
+use App\Service\CheckExpiringSubscriptionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
@@ -88,16 +90,21 @@ class SubscriptionController extends Controller
         ]);
 
         if(!$request->user()->subscriptions()->whereKey($id)->exists()) {
-            return redirect()->back()->withErrors(['error' => 'Assinatura não encontrada']);
+            return redirect()->back()->with(['error' => 'Assinatura não encontrada']);
         }
 
-        $subscription = $request->user()->subscriptions()->find($id);
+
+        $subscription = $request->user()->subscriptions()->findOrFail($id);
+        if(!$subscription->is_active) {
+            return back()->with(['error' => 'Não é possível editar uma assinatura inativa. Por favor, ative a assinatura antes de editá-la.']);
+        }
+
         $previousLastBilling = optional($subscription->last_billing)->toDateString();
 
         $subscription->update($data);
 
         if ($data['last_billing'] !== $previousLastBilling) {
-            Artisan::call('subscriptions:check-expiring');
+            CheckExpiringSubscriptionService::handle();
         }
         return redirect()->route('subscriptions.show', $subscription->id)->with('success', 'Assinatura atualizada com sucesso!');
     }
