@@ -1,4 +1,4 @@
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import { useState } from "react";
 import type { ReactNode } from "react";
 
@@ -6,6 +6,7 @@ type SidebarItem = {
   label: string;
   href: string;
 };
+
 
 function Icon({ children, title }: { children: ReactNode; title?: string }) {
   return (
@@ -75,6 +76,11 @@ const labelsByHref: Record<string, string> = {
 };
 
 export default function Sidebar() {
+  const { url } = usePage();
+  const [pendingUrl, setPendingUrl] = useState<string | null>(null);
+  const current = pendingUrl ?? url;
+  const isActive = (path: string) => current.startsWith(path);
+
   const [open, setOpen] = useState<boolean>(true);
 
   const items: SidebarItem[] = [
@@ -100,9 +106,9 @@ export default function Sidebar() {
 
       {/* Menu */}
       <nav className="flex-1 p-5 gap-5 flex flex-col">
-        {items.map((item, index) => (
-          <Link href={item.href} key={index}>
-            <div className="flex items-center gap-5 p-3 rounded cursor-pointer hover:bg-zinc-500 transition-colors">
+        {items.map((item) => (
+          <Link href={item.href} key={item.href} onClick={() => setPendingUrl(item.href)}>
+            <div className={`flex items-center gap-5 p-3 rounded cursor-pointer hover:bg-zinc-500 transition-colors ${isActive(item.href) ? "bg-zinc-700 ml-2 transition" : ""}`}>
               <span className="grid place-items-center">
                 {iconsByHref[item.href]}
               </span>
