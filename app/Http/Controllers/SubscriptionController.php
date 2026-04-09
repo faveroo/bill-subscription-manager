@@ -4,13 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\BillingCycle;
 use App\Models\Category;
-use App\Models\Subscription;
-use App\Notifications\SubscriptionExpiring;
-use App\Service\CheckExpiringSubscriptionService;
+use App\Http\Requests\SubscriptionRequest;
+use App\Services\CheckExpiringSubscriptionService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Schedule;
 
 class SubscriptionController extends Controller
 {   
@@ -33,16 +30,9 @@ class SubscriptionController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(SubscriptionRequest $request)
     {
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'price' => ['required', 'numeric', 'min:0'],
-            'billing_cycle_id' => ['required', 'exists:billing_cycles,id'],
-            'last_billing' => ['required', 'date'],
-            'category_id' => ['required', 'exists:categories,id']
-        ]);
-
+        $data = $request->validated();
         /** @var \App\Models\User $user */
         $user = Auth::user();
         $subscription = $user->subscriptions()->create($data);
@@ -79,22 +69,16 @@ class SubscriptionController extends Controller
             ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(SubscriptionRequest $request, $id)
     {
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'price' => ['required', 'numeric', 'min:0'],
-            'billing_cycle_id' => ['required', 'exists:billing_cycles,id'],
-            'last_billing' => ['required', 'date'],
-            'category_id' => ['required','exists:categories,id']
-        ]);
+        $data = $request->validated();
 
         if(!$request->user()->subscriptions()->whereKey($id)->exists()) {
             return redirect()->back()->with(['error' => 'Assinatura não encontrada']);
         }
 
-
         $subscription = $request->user()->subscriptions()->findOrFail($id);
+
         if(!$subscription->is_active) {
             return back()->with(['error' => 'Não é possível editar uma assinatura inativa. Por favor, ative a assinatura antes de editá-la.']);
         }
