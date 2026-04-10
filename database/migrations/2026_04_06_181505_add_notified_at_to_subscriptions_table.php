@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('subscriptions', function (Blueprint $table) {
-            $table->timestamp('notified_at')->nullable()->after('next_billing_date');
+            $table->json('notified_at')->nullable()->after('next_billing_date');
         });
     }
 
