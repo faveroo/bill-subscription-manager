@@ -1,4 +1,4 @@
-import { usePage } from '@inertiajs/react';
+import { usePage, Link } from '@inertiajs/react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { AppNotification, PageProps } from '@/types';
 
@@ -347,7 +347,9 @@ export default function Header() {
 
                     <div className="flex items-center gap-2">
                         <div className="h-8 w-8 rounded-full bg-gray-300" />
-                        <span className="text-sm text-white">{userName}</span>
+                        <Link href="/profile" className="text-sm text-white hover:underline">
+                            {userName}
+                        </Link>
                     </div>
                 </div>
             </header>

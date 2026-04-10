@@ -35,4 +35,5 @@ Route::middleware('auth')->group(function () {
     
     Route::inertia('/settings', 'settings/Index')->name('settings.index');
 
+    Route::inertia('/profile', 'profile/Index')->name('profile.index');
 });
