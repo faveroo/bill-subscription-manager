@@ -9,40 +9,43 @@ class CheckExpiringSubscriptionService
 {
     public static function handle(array $daysBefore = [0]): void
     {
-        foreach ($daysBefore as $days) {
-            if(!is_int($days) || $days < 0) {
+        foreach ($daysBefore as $day) {
+            if(!is_int($day) || $day < 0) {
                 continue;
             }
 
             Subscription::with('user')
-                ->whereDate('next_billing_date', today()->addDays($days))
-                ->chunkById(100, function ($subscriptions) use ($days) {
+                ->whereBetween('next_billing_date', [today()->addDays($day)->startOfDay(), today()->addDays($day)->endOfDay()])
+                ->chunkById(100, function ($subscriptions) use ($day) {
                     foreach ($subscriptions as $subscription) {
+                        $subscription->refresh();
                         $user = $subscription->user;
 
                         if (!$user) {
                             continue;
                         }
 
-                        $alreadyNotified = $user->notifications()
-                            ->where('type', SubscriptionExpiring::class)
-                            ->where('data->subscription_id', $subscription->id)
-                            ->where('data->days_before', $days)
-                            ->exists();
+                        $notifiedDays = $subscription->notified_at ?? [];
 
-                        if ($alreadyNotified) {
+                        if(in_array($day, $notifiedDays)) {
                             continue;
                         }
+
+                        $daysBefore = intVal(max(0, now()->diffInDays($subscription->next_billing_date, false)));
+                        print_r($daysBefore);
 
                         $user->notify(new SubscriptionExpiring(
                             subscriptionId: $subscription->id,
                             subscriptionName: $subscription->name,
                             nextBillingDate: (string) $subscription->next_billing_date,
-                            daysBefore: $days,
+                            daysBefore: $daysBefore,
                         ));
 
-                        $subscription->forceFill(['notified_at' => now()])->saveQuietly();
+                        $notifiedDays[] = $day;
+
+                        $subscription->update(['notified_at' => array_values(array_unique($notifiedDays))]);
                     }
+                return;
                 });
         }
     }
