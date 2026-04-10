@@ -14,6 +14,7 @@ class Subscription extends Model
     public function casts(): array
     {
         return [
+            'notified_at' => 'array',
             'last_billing' => 'date:Y-m-d',
             'next_billing_date' => 'date:Y-m-d',
             'is_active' => 'boolean',
