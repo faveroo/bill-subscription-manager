@@ -27,10 +27,10 @@ class UpdateNextBilling extends Command
 
                         if ($this->checkLastBillingDate($subscription)) {
                             return;
-                        }
+                        }   
 
                         $nextBillingDate = $this->calculateNextBillingDate(
-                            $subscription->last_billing_date,
+                            $subscription->next_billing_date,
                             $subscription->billingCycle
                         );
 
