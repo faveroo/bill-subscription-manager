@@ -15,6 +15,7 @@ export default function Assinaturas() {
     const [billingCycleFilter, setBillingCycleFilter] = useState('');
     const [dateFilter, setDateFilter] = useState('');
     const [categoryFilter, setCategoryFilter] = useState('');
+    const [activeFilter, setActiveFilter] = useState(false);
 
     const money = useMemo(
         () =>
@@ -41,9 +42,11 @@ export default function Assinaturas() {
         const matchesCategory = categoryFilter
             ? sub.category?.name === categoryFilter
             : true;
+        
+        const matchesActive = activeFilter ? sub.is_active : true;
 
         return (
-            matchesName && matchesBillingCycle && matchesDate && matchesCategory
+            matchesName && matchesBillingCycle && matchesDate && matchesCategory && matchesActive
         );
     });
 
@@ -83,7 +86,7 @@ export default function Assinaturas() {
                 <p className="text-gray-400">Nenhuma assinatura encontrada.</p>
             ) : (
                 <>
-                    <div className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                    <div className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                         <input
                             type="text"
                             placeholder="Buscar por nome"
@@ -143,6 +146,18 @@ export default function Assinaturas() {
                                 </option>
                             ))}
                         </select>
+
+                        <label htmlFor="active-filter" className="flex items-center gap-3 px-3 py-2 bg-zinc-800 rounded-xl cursor-pointer ring-1 ring-white/10">
+                            <input 
+                                type="checkbox"
+                                id="active-filter"
+                                checked={activeFilter}
+                                onChange={(e) => setActiveFilter(e.target.checked)}
+                                className="h-5 w-5 rounded border-gray-300 accent-zinc-800 shrink-0"
+                            />
+
+                            <span className="text-white whitespace-nowrap">Somente ativas?</span>
+                        </label>
                     </div>
 
                     {filteredSubscriptions.length === 0 ? (
