@@ -45,6 +45,9 @@ class SubscriptionController extends Controller
             $user = Auth::user();
             $subscription = $user->subscriptions()->with('billingCycle', 'category')->find($id);
 
+            $total_paid = $subscription->billingHistories()->sum('amount');
+            $subscription->total_paid = $total_paid;
+
             if (!$subscription) {
                 return redirect()
                     ->route('subscriptions.index')

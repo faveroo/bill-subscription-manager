@@ -9,5 +9,6 @@ export type Subscription = {
     last_billing?: string | Date;
     next_billing_date: string;
     billing_cycle?: BillingCycle;
-    category?: category
+    category?: category;
+    total_paid: number;
 };

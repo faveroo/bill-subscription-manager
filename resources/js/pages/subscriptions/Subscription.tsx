@@ -142,36 +142,42 @@ export default function SubscriptionInfo() {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                    <div className="rounded-xl border border-zinc-700 bg-zinc-800 p-4">
+                <div className="grid grid-cols-6 gap-5 sm:grid-cols-6">
+                    <div className="rounded-xl col-span-2 border border-zinc-700 bg-zinc-800 p-4">
                         <p className="text-sm text-zinc-300">Preço</p>
                         <p className="mt-1 text-2xl font-semibold text-white">
-                            {formatCurrencyBRL(subscription.price)}
+                            {formatCurrencyBRL(subscription.price)}  <span className="text-zinc-400 text-xs">{subscription.billing_cycle?.name}</span>
                         </p>
                     </div>
 
-                    <div className="rounded-xl border border-zinc-700 bg-zinc-800 p-4">
-                        <p className="text-sm text-zinc-300">
-                            Próxima cobrança
-                        </p>
+                    <div className="rounded-xl col-span-2 border border-zinc-700 bg-zinc-800 p-4">
+                        <p className="text-sm text-zinc-300">Total pago</p>
                         <p className="mt-1 text-2xl font-semibold text-white">
-                            {formattedNextBilling}
+                            {formatCurrencyBRL(subscription.total_paid)}
                         </p>
                     </div>
 
-                    <div className="rounded-xl border border-zinc-700 bg-zinc-800 p-4">
+                    <div className="rounded-xl col-span-2 border border-zinc-700 bg-zinc-800 p-4">
+                        <p className="text-sm text-zinc-300">
+                            Ciclo de cobrança
+                        </p>
+                        <p className="mt-1 text-xl font-semibold text-white">
+                            {billingCycleName}
+                        </p>
+                    </div>    
+                    <div className="rounded-xl col-span-3 border border-zinc-700 bg-zinc-800 p-4">
                         <p className="text-sm text-zinc-300">Última cobrança</p>
                         <p className="mt-1 text-xl font-semibold text-white">
                             {formatted}
                         </p>
                     </div>
 
-                    <div className="rounded-xl border border-zinc-700 bg-zinc-800 p-4">
+                    <div className="rounded-xl border col-span-3 border-zinc-700 bg-zinc-800 p-4">
                         <p className="text-sm text-zinc-300">
-                            Ciclo de cobrança
+                            Próxima cobrança
                         </p>
-                        <p className="mt-1 text-xl font-semibold text-white">
-                            {billingCycleName}
+                        <p className="mt-1 text-2xl font-semibold text-white">
+                            {formattedNextBilling}
                         </p>
                     </div>
                 </div>
