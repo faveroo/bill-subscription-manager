@@ -40,6 +40,14 @@ class SubscriptionController extends Controller
         /** @var \App\Models\User $user */
         $user = Auth::user();
         $subscription = $user->subscriptions()->create($data);
+
+        $subscription->billingHistories()->create([
+            'user_id' => $subscription->user_id,
+            'event_date' => now('America/Sao_Paulo'),
+            'amount' => $subscription->price,
+            'type' => 'A'
+        ]);
+
         return redirect()->route('subscriptions.show', $subscription->id)->with('success', 'Assinatura criada com sucesso!');
     }
 
@@ -49,7 +57,7 @@ class SubscriptionController extends Controller
         $user = Auth::user();
         $subscription = $user->subscriptions()->with('billingCycle', 'category')->find($id);
 
-        $total_paid = $subscription->billingHistories()->sum('amount');
+        $total_paid = $subscription->billingHistories()->where('type', 'A')->sum('amount');
         $subscription->total_paid = $total_paid;
 
         if (!$subscription) {
@@ -116,7 +124,7 @@ class SubscriptionController extends Controller
             'user_id' => $subscription->user_id,
             'event_date' => now('America/Sao_Paulo'),
             'amount' => $subscription->price,
-            'type' => $subscription->is_active ? 'A' : 'C'
+            'type' => $subscription->is_active ? 'R' : 'C'
         ]);
 
         return redirect()->back()->with(
