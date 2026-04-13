@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BillingCycle;
 use App\Models\Category;
 use App\Http\Requests\SubscriptionRequest;
+use App\Models\Subscription;
 use App\Services\CheckExpiringSubscriptionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -114,5 +115,20 @@ class SubscriptionController extends Controller
                 ? 'Assinatura ativada com sucesso!'
                 : 'Assinatura inativada com sucesso!',
         );
+    }
+
+    public function history($id)
+    {   
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $subscription = $user->subscriptions()->whereKey($id)->first();
+
+        if(!$subscription) {
+            return redirect()->back()->withErrors(['error' => 'Assinatura não encontrada']);
+        } 
+        
+        return inertia('subscriptions/History', [
+            'histories' => $subscription->billingHistories()->with('subscription')->get()
+        ]);
     }
 }

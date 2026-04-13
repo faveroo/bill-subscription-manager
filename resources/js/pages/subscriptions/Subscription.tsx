@@ -192,6 +192,12 @@ export default function SubscriptionInfo() {
                             >
                                 Editar
                             </Link>
+                            <Link
+                                href={`/subscriptions/${subscription.id}/history/`}
+                                className="rounded border border-green-600 px-4 py-2 text-center text-sm text-white transition-colors hover:bg-green-600"
+                            >
+                                Histórico de cobranças
+                            </Link>
 
                             <button
                                 type="button"

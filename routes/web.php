@@ -28,6 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/subscriptions/{id}', [SubscriptionController::class, 'update'])->name('subscriptions.update')->middleware('throttle:10,1');
     Route::patch('/subscriptions/{id}/toggle-active', [SubscriptionController::class, 'toggleActive'])->name('subscriptions.toggleActive')->middleware('throttle:10,1');
     Route::get('/subscriptions/{id}/edit', [SubscriptionController::class, 'edit'])->name('subscriptions.edit');
+    Route::get('/subscriptions/{id}/history', [SubscriptionController::class, 'history'])->name('subscriptions.history');
 
     Route::inertia('/categories', 'categories/Index')->name('categories.index');
     

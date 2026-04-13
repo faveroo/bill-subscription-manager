@@ -34,4 +34,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Subscription::class);
     }
+
+    public function billingHistories()
+    {
+        return $this->hasManyThrough(BillingHistory::class, Subscription::class);
+    }
 }
