@@ -25,4 +25,5 @@ export type NewSubscriptionPageProps = {
 
 export type SubscriptionHistoryProps = {
     histories: History[];
+    subscription: Subscription;
 }
