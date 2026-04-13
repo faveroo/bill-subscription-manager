@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BillingCycle;
 use App\Models\Category;
 use App\Http\Requests\SubscriptionRequest;
+use App\Models\BillingHistory;
 use App\Models\Subscription;
 use App\Services\CheckExpiringSubscriptionService;
 use Illuminate\Http\Request;
@@ -108,6 +109,13 @@ class SubscriptionController extends Controller
         }
 
         $subscription->update(['is_active' => !$subscription->is_active]);
+
+        $subscription->billingHistories()->create([
+            'user_id' => $subscription->user_id,
+            'billing_date' => $subscription->last_billing,
+            'amount' => $subscription->price,
+            'type' => $subscription->is_active ? 'A' : 'C'
+        ]);
 
         return redirect()->back()->with(
             'success',
