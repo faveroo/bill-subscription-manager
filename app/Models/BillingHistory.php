@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['subscription_id', 'billing_date', 'amount', 'user_id', 'type'])]
+#[Fillable(['subscription_id', 'event_date', 'amount', 'user_id', 'type'])]
 class BillingHistory extends Model
 {
     protected $table = 'billing_history';

@@ -11,10 +11,12 @@ use App\Services\CheckExpiringSubscriptionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use function Symfony\Component\Clock\now;
+
 class SubscriptionController extends Controller
-{   
+{
     public function index()
-    {   
+    {
         /** @var \App\Models\User $user */
         $user = Auth::user();
         $subscriptions = $user->subscriptions()->with('billingCycle', 'category')->get();
@@ -43,48 +45,48 @@ class SubscriptionController extends Controller
 
     public function show($id)
     {
-            /** @var \App\Models\User $user */
-            $user = Auth::user();
-            $subscription = $user->subscriptions()->with('billingCycle', 'category')->find($id);
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $subscription = $user->subscriptions()->with('billingCycle', 'category')->find($id);
 
-            $total_paid = $subscription->billingHistories()->sum('amount');
-            $subscription->total_paid = $total_paid;
+        $total_paid = $subscription->billingHistories()->sum('amount');
+        $subscription->total_paid = $total_paid;
 
-            if (!$subscription) {
-                return redirect()
-                    ->route('subscriptions.index')
-                    ->with('error', 'Assinatura não encontrada.');
-            }
+        if (!$subscription) {
+            return redirect()
+                ->route('subscriptions.index')
+                ->with('error', 'Assinatura não encontrada.');
+        }
 
-            return inertia('subscriptions/Subscription', [
-                'subscription' => $subscription
-            ]);
+        return inertia('subscriptions/Subscription', [
+            'subscription' => $subscription
+        ]);
     }
 
     public function edit($id)
     {
-            /** @var \App\Models\User $user */
-            $user = Auth::user();
-            $subscription = $user->subscriptions()->with('billingCycle', 'category')->findOrFail($id);
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $subscription = $user->subscriptions()->with('billingCycle', 'category')->findOrFail($id);
 
-            return inertia('subscriptions/Edit', [
-                'subscription' => $subscription,
-                'categories' => Category::select('id', 'name')->get(),
-                'billingCycles' => BillingCycle::select('id', 'name')->get()
-            ]);
+        return inertia('subscriptions/Edit', [
+            'subscription' => $subscription,
+            'categories' => Category::select('id', 'name')->get(),
+            'billingCycles' => BillingCycle::select('id', 'name')->get()
+        ]);
     }
 
     public function update(SubscriptionRequest $request, $id)
     {
         $data = $request->validated();
 
-        if(!$request->user()->subscriptions()->whereKey($id)->exists()) {
+        if (!$request->user()->subscriptions()->whereKey($id)->exists()) {
             return redirect()->back()->with(['error' => 'Assinatura não encontrada']);
         }
 
         $subscription = $request->user()->subscriptions()->findOrFail($id);
 
-        if(!$subscription->is_active) {
+        if (!$subscription->is_active) {
             return back()->with(['error' => 'Não é possível editar uma assinatura inativa. Por favor, ative a assinatura antes de editá-la.']);
         }
 
@@ -112,7 +114,7 @@ class SubscriptionController extends Controller
 
         $subscription->billingHistories()->create([
             'user_id' => $subscription->user_id,
-            'billing_date' => $subscription->last_billing,
+            'event_date' => now('America/Sao_Paulo'),
             'amount' => $subscription->price,
             'type' => $subscription->is_active ? 'A' : 'C'
         ]);
@@ -126,16 +128,17 @@ class SubscriptionController extends Controller
     }
 
     public function history($id)
-    {   
+    {
         /** @var \App\Models\User $user */
         $user = Auth::user();
         $subscription = $user->subscriptions()->whereKey($id)->first();
 
-        if(!$subscription) {
+        if (!$subscription) {
             return redirect()->back()->withErrors(['error' => 'Assinatura não encontrada']);
-        } 
-        
+        }
+
         return inertia('subscriptions/History', [
+            'subscription' => $subscription,
             'histories' => $subscription->billingHistories()->with('subscription')->get()
         ]);
     }

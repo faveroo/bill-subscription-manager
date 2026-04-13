@@ -45,7 +45,7 @@ class UpdateNextBilling extends Command
                     
                         $subscription->billingHistories()->create([
                             'user_id' => $subscription->user_id,
-                            'billing_date' => $subscription->last_billing,
+                            'event_date' => now(),
                             'amount' => $subscription->price,
                         ]);
                     });     
@@ -72,12 +72,12 @@ class UpdateNextBilling extends Command
         return $subscription->last_billing_date > now();
     }
 
-    private function persistHistory(Subscription $subscription): void
-    {
-        $subscription->billingHistories()->create([
-            'user_id' => $subscription->user_id,
-            'billing_date' => $subscription->next_billing_date,
-            'amount' => $subscription->price,
-        ]);
-    }
+    // private function persistHistory(Subscription $subscription): void
+    // {
+    //     $subscription->billingHistories()->create([
+    //         'user_id' => $subscription->user_id,
+    //         'billing_date' => $subscription->next_billing_date,
+    //         'amount' => $subscription->price,
+    //     ]);
+    // }
 }
