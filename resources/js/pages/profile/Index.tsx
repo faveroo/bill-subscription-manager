@@ -10,7 +10,7 @@ export default function Profile() {
     const user = props?.auth?.user;
     return (
         <>
-            <Head title="Perfil" />
+            <Head title={`Perfil • ${user?.name}`} />
 
             <div className="max-w-xl mx-auto">
                 <div className="h-32 rounded-2xl bg-gradient-to-br from-zinc-900/70 via-stone-800 to-zinc-900/10"></div>
