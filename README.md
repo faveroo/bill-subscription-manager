@@ -4,19 +4,6 @@ Um sistema web para gerenciamento de assinaturas e despesas recorrentes, permiti
 
 ---
 
-## ✨ Funcionalidades
-
-* 📌 Cadastro de assinaturas (Netflix, Spotify, etc.)
-* 📅 Controle de datas de cobrança
-* 💰 Registro de valores e periodicidade
-* 🔄 Atualização automática da próxima cobrança
-* 📊 Visualização organizada das assinaturas
-* 🔔 Sistema de feedback com notificações (flash messages)
-* 🔐 Autenticação de usuários
-* 🧾 Separação de dados por usuário
-
----
-
 ## 🚀 Tecnologias utilizadas
 
 ### Backend
@@ -36,18 +23,6 @@ Um sistema web para gerenciamento de assinaturas e despesas recorrentes, permiti
 * **Vite**
 * **Ziggy** — Rotas Laravel no frontend
 * **ESLint + Prettier**
-
----
-
-## 🧠 Conceitos aplicados
-
-* Arquitetura MVC
-* Separação de responsabilidades
-* Gerenciamento de estado no frontend
-* Boas práticas com formulários e validação
-* Controle de datas e recorrência
-* Rate limiting (tratamento de múltiplas requisições)
-* Uso de Resources para padronização de dados
 
 ---
 
@@ -73,7 +48,6 @@ Este projeto foi desenvolvido com o objetivo de:
 
 * Praticar desenvolvimento fullstack com Laravel + React
 * Criar uma aplicação real para controle financeiro pessoal
-* Aplicar boas práticas de organização e código limpo
 * Servir como projeto de portfólio
 
 ---
