@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import MainLayout from '../../layouts/MainLayout';
 import { usePage } from '@inertiajs/react';
 import type { PageProps } from '@/types';
+import { formatDate } from '../../lib/utils';
 
 export default function Profile() {
     const { props }  = usePage<PageProps>();
@@ -12,13 +13,35 @@ export default function Profile() {
             <Head title="Perfil" />
 
             <div className="max-w-xl mx-auto">
-                <div className="h-32 rounded-2xl bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900"></div>
-                <div className="text-center -mt-12 ">
-                    <div className="ml-2 text-center items-center">
-                        <div className="ml-3 w-24 h-24 rounded-full bg-white border-4 border-white"></div>
-                        <h1 className="text-2xl font-bold">Informations</h1>
-                        <label htmlFor="E-mail" className='text-xl'>E-mail</label>
-                        <span className="text-lg text-gray-400 ml-10">{user?.email}</span>
+                <div className="h-32 rounded-2xl bg-gradient-to-br from-zinc-900/70 via-stone-800 to-zinc-900/10"></div>
+                <div className="-mt-12 px-4">
+                    <div className="flex items-end gap-5">
+                        <div className="ml-3 w-24 h-24 rounded-full"><img src={`/storage/profile.png`} alt="Profile Image"/></div>
+                        <div className="pb-1">
+                            <span className="text-2xl text-white">{user?.name}</span>
+                        </div>
+                    </div>
+
+                    <div className="mt-6 p-5 rounded-2xl bg-zinc-900/10 space-y-4 mx-12">
+                        <h1 className="text-2xl text-white font-bold text-center">
+                            Informations
+                        </h1>
+
+                        {/* Email */}
+                        <div className="flex justify-between items-center">
+                            <span className="text-zinc-300">E-mail</span>
+                            <span className="text-white">
+                                {user?.email}
+                            </span>
+                        </div>
+
+                        {/* Created At */}
+                        <div className="flex justify-between items-center">
+                            <span className="text-zinc-300">Criado em</span>
+                            <span className="text-gray-400">
+                                {formatDate(user?.created_at)}
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
