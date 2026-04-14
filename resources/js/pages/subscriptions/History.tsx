@@ -1,6 +1,6 @@
 import { Head, Link, usePage } from '@inertiajs/react';
 import type { ReactNode } from 'react';
-import { formatDate, formatCurrencyBRL } from '@/lib/utils';
+import { formatDate } from '@/lib/utils';
 import type { SubscriptionHistoryProps } from '@/types/pages/subscriptions';
 import MainLayout from '../../layouts/MainLayout';
 import { historyMeta } from '@/config/historyMeta';
@@ -46,7 +46,6 @@ export default function History() {
                         <ul className="divide-y divide-zinc-700">
                             {histories.map((item) => {
                                 const meta = historyMeta[item.type];
-                                console.log(item)
 
                                 return (
                                     <li
