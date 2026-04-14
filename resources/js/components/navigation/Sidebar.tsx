@@ -43,8 +43,8 @@ const iconsByHref: Record<string, ReactNode> = {
       <path d="M7 15h4" />
     </Icon>
   ),
-  "/categories": (
-    <Icon title="Categorias">
+  "/history": (
+    <Icon title="Histórico">
       <path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6" />
       <path d="M16 4h4v4" />
       <path d="M20 4l-8 8" />
@@ -70,7 +70,7 @@ const iconsByHref: Record<string, ReactNode> = {
 const labelsByHref: Record<string, string> = {
   "/dashboard": "Dashboard",
   "/subscriptions": "Assinaturas",
-  "/categories": "Categorias",
+  "/history": "Histórico",
   "/reports": "Relatórios",
   "/settings": "Configurações",
 };
@@ -86,16 +86,15 @@ export default function Sidebar() {
   const items: SidebarItem[] = [
     { label: "Dashboard", href: "/dashboard" },
     { label: "Assinaturas", href: "/subscriptions" },
-    { label: "Categorias", href: "/categories" },
+    { label: "Histórico", href: "/history" },
     { label: "Relatórios", href: "/reports" },
     { label: "Configurações", href: "/settings" },
   ];
 
   return (
     <aside
-      className={`h-screen bg-zinc-600 border-r transition-all duration-300 flex flex-col ${
-        open ? "w-54" : "w-20"
-      }`}
+      className={`h-screen bg-zinc-600 border-r transition-all duration-300 flex flex-col ${open ? "w-54" : "w-20"
+        }`}
     >
       {/* Logo */}
       <div className="h-16 flex items-center justify-center border-b">
@@ -108,8 +107,8 @@ export default function Sidebar() {
       <nav className="flex-1 p-5 gap-5 flex flex-col">
         {items.map((item) => (
           <Link href={item.href} key={item.href} onClick={() => setPendingUrl(item.href)}>
-            <div className={`flex items-center gap-5 p-3 rounded cursor-pointer hover:bg-zinc-500 transition-colors ${isActive(item.href) ? "bg-zinc-700 ml-2 transition" : ""}`}>
-              <span className="grid place-items-center">
+            <div className={`flex items-center gap-5 px-2 py-3 rounded cursor-pointer hover:bg-zinc-500 transition-colors ${isActive(item.href) ? "bg-zinc-700 transition" : ""}`}>
+              <span className={`grid place-items-center ${!open ? "w-full" : ""}`}>
                 {iconsByHref[item.href]}
               </span>
               {open && (
