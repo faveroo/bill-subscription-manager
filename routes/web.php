@@ -30,10 +30,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/subscriptions/{id}/edit', [SubscriptionController::class, 'edit'])->name('subscriptions.edit');
     Route::get('/subscriptions/{id}/history', [SubscriptionController::class, 'history'])->name('subscriptions.history');
 
-    Route::inertia('/categories', 'categories/Index')->name('categories.index');
-    
+    Route::inertia('/history', 'history/Index')->name('history.index');
+
     Route::inertia('/reports', 'reports/Index')->name('reports.index');
-    
+
     Route::inertia('/settings', 'settings/Index')->name('settings.index');
 
     Route::inertia('/profile', 'profile/Index')->name('profile.index');
