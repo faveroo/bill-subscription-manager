@@ -4,13 +4,13 @@ type HistoryType = 'R' | 'C' | 'P' | 'A';
 
 export const historyMeta: Record<HistoryType, {
     label: string;
-    description: (item: any) => string;
+    description: (item: any, billing_cycle: any) => string;
     className: string;
 }> = {
     A: {
         label: 'Assinatura ativada',
         className: 'bg-blue-500/10 text-blue-400',
-        description: (item) => `A assinatura foi iniciada pagando R$ ${formatCurrencyBRL(item.amount)} ${item.billing_cycle}.`,
+        description: (item, billing_cycle) => `A assinatura foi iniciada pagando R$ ${formatCurrencyBRL(item.amount)} ${billing_cycle}.`,
     },
     C: {
         label: 'Assinatura cancelada',
