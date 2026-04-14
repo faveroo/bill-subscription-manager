@@ -12,8 +12,20 @@ export default function Historico() {
 
     type HistoryItem = typeof histories[number];
 
+    const getLocalYYYYMMDD = (d: string | number | Date) => {
+        const dateObj = new Date(d);
+        const ptBR = dateObj.toLocaleDateString('pt-BR', {
+            timeZone: 'America/Sao_Paulo',
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+        const [day, month, year] = ptBR.split('/');
+        return `${year}-${month}-${day}`;
+    };
+
     const grouped = histories.reduce<Record<string, HistoryItem[]>>((acc, item) => {
-        const rawDate = item.event_date.split('T')[0];
+        const rawDate = getLocalYYYYMMDD(item.event_date);
 
         if (!acc[rawDate]) acc[rawDate] = [];
         acc[rawDate].push(item);
@@ -22,20 +34,20 @@ export default function Historico() {
     }, {});
 
     const formatGroupDate = (date: string) => {
-        const today = new Date().toISOString().split('T')[0];
-        const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+        const today = getLocalYYYYMMDD(Date.now());
+        const yesterday = getLocalYYYYMMDD(Date.now() - 86400000);
 
         if (date === today) return 'Hoje';
         if (date === yesterday) return 'Ontem';
 
-        return new Date(date).toLocaleDateString('pt-BR', {
+        return new Date(`${date}T12:00:00`).toLocaleDateString('pt-BR', {
             weekday: 'long',
             day: '2-digit',
             month: 'long',
             year: 'numeric',
         });
     };
-
+    console.log(grouped)
     return (
         <>
             <Head title="Histórico" />
