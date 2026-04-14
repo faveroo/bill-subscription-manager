@@ -3,7 +3,7 @@ import type { History } from '../model/history';
 export type HistoryPageProps = {
     histories: {
         data: History[];
-        meta: {
+        pagination: {
             current_page: number;
             from: number;
             last_page: number;
@@ -11,5 +11,11 @@ export type HistoryPageProps = {
             to: number;
             total: number;
         };
+        links: {
+            url: string | null;
+            page: number;
+            label: string;
+            active: boolean;
+        }[];
     };
 };
