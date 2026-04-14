@@ -10,7 +10,7 @@ export const historyMeta: Record<HistoryType, {
     A: {
         label: 'Assinatura ativada',
         className: 'bg-blue-500/10 text-blue-400',
-        description: () => 'A assinatura foi iniciada.',
+        description: (item) => `A assinatura foi iniciada pagando R$ ${formatCurrencyBRL(item.amount)} ${item.billing_cycle}.`,
     },
     C: {
         label: 'Assinatura cancelada',

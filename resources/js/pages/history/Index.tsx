@@ -1,48 +1,112 @@
 import { Head, router, usePage } from '@inertiajs/react';
 import type { ReactNode } from 'react';
-import { formatDate, formatCurrencyBRL } from '@/lib/utils';
+import { formatDate } from '@/lib/utils';
 import MainLayout from '../../layouts/MainLayout';
 import type { HistoryPageProps } from '../../types/pages/history';
 import { historyMeta } from '@/config/historyMeta';
 
 export default function Historico() {
     const { props } = usePage<HistoryPageProps>();
-    const histories = props.histories.data;
-    const links = props.histories.links;
+    const { data: histories, links } = props.histories;
+
+    type HistoryItem = typeof histories[number];
+
+    const grouped = histories.reduce<Record<string, HistoryItem[]>>((acc, item) => {
+        const rawDate = item.event_date.split('T')[0];
+
+        if (!acc[rawDate]) acc[rawDate] = [];
+        acc[rawDate].push(item);
+
+        return acc;
+    }, {});
+
+    const formatGroupDate = (date: string) => {
+        const today = new Date().toISOString().split('T')[0];
+        const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+
+        if (date === today) return 'Hoje';
+        if (date === yesterday) return 'Ontem';
+
+        return new Date(date).toLocaleDateString('pt-BR', {
+            weekday: 'long',
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric',
+        });
+    };
+
     return (
         <>
             <Head title="Histórico" />
 
-            <div className="p-3">
-                {histories.map((item) => {
-                    const meta = historyMeta[item.type];
-                    return (
-                        <>
-                            <div className="grid grid-cols-5 p-3 gap-5 mb-2 text-white bg-zinc-800 rounded-md">
-                                <div className="col-span-4">{item.subscription.name}</div>
-                                <div className={`col-span-1 text-center rounded-full ${meta.className}`}>{meta.label}</div>
-                                <div className="col-span-3 text-sm text-zinc-400">{formatDate(item.event_date)}</div>
-                            </div>
-                        </>
-                    )
-                })}
-                <div className="flex bg-zinc-800 p-2 rounded-md justify-between mt-4">
-                    {links.map((link, i) => (
-                        <button
-                            key={i}
-                            disabled={!link.url}
-                            onClick={() => link.url && router.visit(link.url)}
-                            dangerouslySetInnerHTML={{ __html: link.label }}
-                            className={`px-3 py-1 rounded-sm text-white cursor-pointer hover:bg-zinc-700 transition-colors ${link.active ? 'bg-zinc-900' : 'bg-zinc-800'
-                                }`}
-                        />
-                    ))}
+            {histories.length === 0 ? (
+                <div className="text-center text-zinc-500 mt-10">
+                    Nenhum histórico encontrado.
                 </div>
-            </div>
+            ) : (
+                <div className="p-3 space-y-6">
+                    {Object.entries(grouped).map(([date, items]) => (
+                        <div key={date}>
+                            <div className="mb-5">
+                                <div className="text-xl font-bold text-zinc-300 capitalize">
+                                    {formatGroupDate(date)} <hr />
+                                </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                {items.map((item) => {
+                                    const meta = historyMeta[item.type];
+
+                                    return (
+                                        <div
+                                            key={item.id}
+                                            className="grid grid-cols-5 items-center p-3 gap-3 text-white bg-zinc-800 rounded-md hover:bg-zinc-900 transition-colors"
+                                        >
+                                            <div className="col-span-3 font-semibold text-lg">
+                                                {item.subscription.name}
+                                            </div>
+
+                                            <div className={`text-center col-span-2 text-xs px-2 py-1 rounded-full ${meta.className}`}>
+                                                {meta.label}
+                                            </div>
+
+                                            <div className="grid grid-cols-2 border-t pt-2 border-zinc-400 col-span-5">
+                                                <div className="text-xs text-left text-zinc-400">
+                                                    {meta.description(item)}
+                                                </div>
+
+                                                <div className="text-xs text-right text-zinc-400">
+                                                    {formatDate(item.event_date)}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    ))}
+
+                    <div className="flex flex-wrap gap-2 bg-zinc-800 p-3 rounded-md justify-center">
+                        {links.map((link, i) => (
+                            <button
+                                key={i}
+                                disabled={!link.url}
+                                onClick={() => link.url && router.visit(link.url)}
+                                dangerouslySetInnerHTML={{ __html: link.label }}
+                                className={`px-3 py-1 rounded text-sm transition-colors
+                                ${link.active
+                                        ? 'bg-zinc-900 text-white'
+                                        : 'bg-zinc-700 text-zinc-300 hover:bg-zinc-600'
+                                    }
+                                ${!link.url && 'opacity-50 cursor-not-allowed'}
+                            `}
+                            />
+                        ))}
+                    </div>
+                </div>
+            )}
         </>
     );
-
 }
 
 Historico.layout = (page: ReactNode) => <MainLayout>{page}</MainLayout>;
-
