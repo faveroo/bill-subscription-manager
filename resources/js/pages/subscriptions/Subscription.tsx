@@ -11,20 +11,6 @@ function formatCurrencyBRL(value: number) {
     }).format(value);
 }
 
-function formatDateBR(value?: string) {
-    if (!value) {
-        return '—';
-    }
-
-    const [year, month, day] = value.split('-');
-
-    if (!year || !month || !day) {
-        return value;
-    }
-
-    return `${day}/${month}/${year}`;
-}
-
 function parseDateOnlyToUtcNoon(value?: string | Date) {
     if (!value) {
         return null;
@@ -70,22 +56,22 @@ export default function SubscriptionInfo() {
     const lastBillingDate = parseDateOnlyToUtcNoon(subscription.last_billing);
     const formatted = lastBillingDate
         ? new Intl.DateTimeFormat('pt-BR', {
-              weekday: 'short',
-              day: '2-digit',
-              month: 'long',
-              year: 'numeric',
-              timeZone: 'America/Sao_Paulo',
-          }).format(lastBillingDate)
+            weekday: 'short',
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric',
+            timeZone: 'America/Sao_Paulo',
+        }).format(lastBillingDate)
         : '';
     const nextBillingDate = parseDateOnlyToUtcNoon(subscription.next_billing_date);
     const formattedNextBilling = nextBillingDate
         ? new Intl.DateTimeFormat('pt-BR', {
-              weekday: 'short',
-              day: '2-digit',
-              month: 'long',
-              year: 'numeric',
-              timeZone: 'America/Sao_Paulo',
-          }).format(nextBillingDate)
+            weekday: 'short',
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric',
+            timeZone: 'America/Sao_Paulo',
+        }).format(nextBillingDate)
         : '';
 
     const billingCycleName = subscription.billing_cycle?.name ?? '—';
@@ -121,9 +107,9 @@ export default function SubscriptionInfo() {
                         </div>
 
                         <div className="inline-flex items-center gap-5 mt-2">
-                        <h1 className="mt-2 truncate text-3xl font-bold text-white">
-                            {subscription.name}
-                        </h1>
+                            <h1 className="mt-2 truncate text-3xl font-bold text-white">
+                                {subscription.name}
+                            </h1>
                             <div className="mt-2">
                                 {subscription.category?.name ? (
                                     <span className="items-center rounded-full bg-zinc-800/20 px-2.5 py-1 text-xs text-zinc-200 ring-1 ring-white/10">
@@ -164,7 +150,7 @@ export default function SubscriptionInfo() {
                         <p className="mt-1 text-xl font-semibold text-white">
                             {billingCycleName}
                         </p>
-                    </div>    
+                    </div>
                     <div className="rounded-xl col-span-3 border border-zinc-700 bg-zinc-800 p-4">
                         <p className="text-sm text-zinc-300">Última cobrança</p>
                         <p className="mt-1 text-xl font-semibold text-white">
