@@ -188,12 +188,13 @@ export default function SubscriptionInfo() {
                                 Histórico de cobranças
                             </Link>
                             {url && (
-                                <Link
-                                    onClick={() => window.open(url, '_blank')}
+                                <a
+                                    href={url}
+                                    target="_blank"
                                     className="rounded border border-blue-600 px-4 py-2 text-center text-sm text-white transition-colors hover:bg-blue-600"
                                 >
                                     Acessar Assinatura
-                                </Link>
+                                </a>
                             )}
                             <button
                                 type="button"
