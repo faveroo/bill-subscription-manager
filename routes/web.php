@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SubscriptionController;
@@ -30,7 +31,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/subscriptions/{id}/edit', [SubscriptionController::class, 'edit'])->name('subscriptions.edit');
     Route::get('/subscriptions/{id}/history', [SubscriptionController::class, 'history'])->name('subscriptions.history');
 
-    Route::inertia('/history', 'history/Index')->name('history.index');
+    Route::get('/history', [HistoryController::class, 'index'])->name('history.index');
 
     Route::inertia('/reports', 'reports/Index')->name('reports.index');
 
