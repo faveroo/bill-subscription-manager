@@ -1,6 +1,7 @@
 import { Head, router, usePage } from '@inertiajs/react';
 import type { ReactNode } from 'react';
 import { formatDate } from '@/lib/utils';
+import { getSubscriptionIcon } from '@/icons/subscriptionIcons';
 import MainLayout from '../../layouts/MainLayout';
 import type { HistoryPageProps } from '../../types/pages/history';
 import { historyMeta } from '@/config/historyMeta';
@@ -62,8 +63,8 @@ export default function Historico() {
                                             key={item.id}
                                             className="grid grid-cols-5 items-center p-3 gap-3 text-white bg-zinc-800 rounded-md hover:bg-zinc-900 transition-colors"
                                         >
-                                            <div className="col-span-3 font-semibold text-lg">
-                                                {item.subscription.name}
+                                            <div className="col-span-3 font-semibold text-xl">
+                                                <span className="flex items-center gap-2">{getSubscriptionIcon(item.subscription.name)} {item.subscription.name}</span>
                                             </div>
 
                                             <div className={`text-center col-span-2 text-xs px-2 py-1 rounded-full ${meta.className}`}>
