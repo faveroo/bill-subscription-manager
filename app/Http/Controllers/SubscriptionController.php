@@ -147,7 +147,7 @@ class SubscriptionController extends Controller
 
         return inertia('subscriptions/History', [
             'subscription' => $subscription,
-            'histories' => $subscription->billingHistories()->with('subscription')->get()
+            'histories' => $subscription->billingHistories()->with('subscription.billingCycle')->get()
         ]);
     }
 }
