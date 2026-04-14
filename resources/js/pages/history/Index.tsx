@@ -72,7 +72,7 @@ export default function Historico() {
 
                                             <div className="grid grid-cols-2 border-t pt-2 border-zinc-400 col-span-5">
                                                 <div className="text-xs text-left text-zinc-400">
-                                                    {meta.description(item)}
+                                                    {meta.description(item, item.subscription.billing_cycle?.name)}
                                                 </div>
 
                                                 <div className="text-xs text-right text-zinc-400">

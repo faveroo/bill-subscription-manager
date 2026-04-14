@@ -46,6 +46,7 @@ export default function History() {
                         <ul className="divide-y divide-zinc-700">
                             {histories.map((item) => {
                                 const meta = historyMeta[item.type];
+                                console.log(item)
 
                                 return (
                                     <li
@@ -56,7 +57,7 @@ export default function History() {
 
                                             <div className="flex items-center gap-3">
                                                 <p className="text-white font-medium">
-                                                    {meta.description(item)}
+                                                    {meta.description(item, item.subscription.billing_cycle?.name)}
                                                 </p>
 
                                             </div>
