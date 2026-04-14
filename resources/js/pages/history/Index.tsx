@@ -47,7 +47,6 @@ export default function Historico() {
             year: 'numeric',
         });
     };
-    console.log(grouped)
     return (
         <>
             <Head title="Histórico" />
@@ -74,6 +73,7 @@ export default function Historico() {
                                         <div
                                             key={item.id}
                                             className="grid grid-cols-5 items-center p-3 gap-3 text-white bg-zinc-800 rounded-md hover:bg-zinc-900 transition-colors"
+                                            onClick={() => window.location.href = `/subscriptions/${item.subscription.id}/history`}
                                         >
                                             <div className="col-span-3 font-semibold text-xl">
                                                 <span className="flex items-center gap-2">{getSubscriptionIcon(item.subscription.name)} {item.subscription.name}</span>
