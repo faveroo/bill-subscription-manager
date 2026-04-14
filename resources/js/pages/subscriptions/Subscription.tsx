@@ -1,6 +1,7 @@
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import type { ReactNode } from 'react';
 import { getSubscriptionIcon } from '@/icons/subscriptionIcons';
+import { getSubsUrl } from '@/lib/subsUrl';
 import type { SubscriptionInfoProps } from '@/types/pages/subscriptions';
 import MainLayout from '../../layouts/MainLayout';
 
@@ -89,6 +90,8 @@ export default function SubscriptionInfo() {
 
         router.patch(`/subscriptions/${subscription.id}/toggle-active`);
     }
+
+    const url = getSubsUrl(subscription.name);
 
     return (
         <>
@@ -184,7 +187,14 @@ export default function SubscriptionInfo() {
                             >
                                 Histórico de cobranças
                             </Link>
-
+                            {url && (
+                                <Link
+                                    onClick={() => window.open(url, '_blank')}
+                                    className="rounded border border-blue-600 px-4 py-2 text-center text-sm text-white transition-colors hover:bg-blue-600"
+                                >
+                                    Acessar Assinatura
+                                </Link>
+                            )}
                             <button
                                 type="button"
                                 onClick={handleToggleActive}

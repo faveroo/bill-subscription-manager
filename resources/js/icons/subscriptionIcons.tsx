@@ -18,7 +18,7 @@ import {
 } from 'react-icons/fa';
 import { SiNetflix } from 'react-icons/si';
 
-function normalizeSubscriptionName(value: string) {
+export function normalizeSubscriptionName(value: string) {
     return value
         .toLowerCase()
         .normalize('NFD')
