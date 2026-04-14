@@ -181,25 +181,25 @@ export default function SubscriptionInfo() {
                             >
                                 Editar
                             </Link>
-                            <Link
-                                href={`/subscriptions/${subscription.id}/history/`}
-                                className="rounded border border-green-600 px-4 py-2 text-center text-sm text-white transition-colors hover:bg-green-600"
-                            >
-                                Histórico de cobranças
-                            </Link>
                             {url && (
                                 <a
                                     href={url}
                                     target="_blank"
-                                    className="rounded border border-blue-600 px-4 py-2 text-center text-sm text-white transition-colors hover:bg-blue-600"
+                                    className="rounded border border-cyan-700 px-4 py-2 text-center text-sm text-white transition-colors hover:bg-cyan-700"
                                 >
                                     Acessar Assinatura
                                 </a>
                             )}
+                            <Link
+                                href={`/subscriptions/${subscription.id}/history/`}
+                                className="rounded border border-emerald-700 px-4 py-2 text-center text-sm text-white transition-colors hover:bg-emerald-700"
+                            >
+                                Histórico de cobranças
+                            </Link>
                             <button
                                 type="button"
                                 onClick={handleToggleActive}
-                                className={`rounded border px-4 py-2 text-sm text-white transition-colors ${subscription.is_active ? 'hover:bg-red-600 border-red-600' : 'hover:bg-green-600 border-green-600'}`}
+                                className={`rounded border px-4 py-2 text-sm text-white transition-colors ${subscription.is_active ? 'hover:bg-red-700 border-red-700' : 'hover:bg-green-700 border-green-700'}`}
                             >
                                 {subscription.is_active
                                     ? 'Inativar assinatura'
