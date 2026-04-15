@@ -19,6 +19,8 @@ class SubscriptionRequest extends FormRequest
             'billing_cycle_id' => ['required', 'exists:billing_cycles,id'],
             'last_billing' => ['required', 'date_format:Y-m-d', 'before_or_equal:today'],
             'category_id' => ['required', 'exists:categories,id'],
+            'has_free_trial' => ['required', 'boolean'],
+            'free_trial_days' => ['required_if:has_free_trial,true', 'integer', 'min:1', 'max:365', 'nullable'],
         ];
     }
 

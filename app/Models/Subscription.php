@@ -45,7 +45,7 @@ class Subscription extends Model
     public function getNextBillingDate()
     {
         $date = Carbon::parse($this->attributes['last_billing']);
-        return match($this->billingCycle->name) {
+        return match ($this->billingCycle->name) {
             'Semanal' => $date->addWeek(),
             'Mensal' => $date->addMonthNoOverflow(),
             'Trimestral' => $date->addMonthNoOverflow(3),

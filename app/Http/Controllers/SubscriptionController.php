@@ -8,6 +8,7 @@ use App\Http\Requests\SubscriptionRequest;
 use App\Models\BillingHistory;
 use App\Models\Subscription;
 use App\Services\CheckExpiringSubscriptionService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -39,6 +40,8 @@ class SubscriptionController extends Controller
         $data = $request->validated();
         /** @var \App\Models\User $user */
         $user = Auth::user();
+
+        $data['last_billing'] = Carbon::parse($data['last_billing'])->addDays(intval($data['free_trial_days'] ?? 0));
         $subscription = $user->subscriptions()->create($data);
 
         $subscription->billingHistories()->create([

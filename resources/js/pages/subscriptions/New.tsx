@@ -20,14 +20,14 @@ function formatDateBR(date: Date) {
     return new Intl.DateTimeFormat('pt-BR').format(date);
 }
 
-function addBillingCycle(lastBilling: Date, billingCycleName: string) {
+function addBillingCycle(lastBilling: Date, billingCycleName: string, freeTrialDays: number) {
     const normalized = billingCycleName.trim().toLowerCase();
 
     if (normalized.includes('mensal')) {
         return new Date(
             lastBilling.getFullYear(),
             lastBilling.getMonth() + 1,
-            lastBilling.getDate(),
+            lastBilling.getDate() + freeTrialDays,
         );
     }
 
@@ -35,7 +35,7 @@ function addBillingCycle(lastBilling: Date, billingCycleName: string) {
         return new Date(
             lastBilling.getFullYear() + 1,
             lastBilling.getMonth(),
-            lastBilling.getDate(),
+            lastBilling.getDate() + freeTrialDays,
         );
     }
 
@@ -43,7 +43,7 @@ function addBillingCycle(lastBilling: Date, billingCycleName: string) {
         return new Date(
             lastBilling.getFullYear(),
             lastBilling.getMonth(),
-            lastBilling.getDate() + 7,
+            lastBilling.getDate() + 7 + freeTrialDays,
         );
     }
 
@@ -65,6 +65,8 @@ export default function NewSubscription({
         price: '',
         billing_cycle_id: '',
         category_id: '',
+        has_free_trial: false,
+        free_trial_days: '',
         last_billing: getTodayIsoDateInSaoPaulo(),
     });
 
@@ -95,14 +97,20 @@ export default function NewSubscription({
             return null;
         }
 
-        const nextBilling = addBillingCycle(lastBilling, cycle.name);
+        const trialDays = data.has_free_trial && data.free_trial_days ? Number(data.free_trial_days) : 0;
+        
+        if (trialDays > 9999) {
+            return 'Data inválida (valor muito alto)';
+        }
 
-        if (!nextBilling) {
+        const nextBilling = addBillingCycle(lastBilling, cycle.name, trialDays);
+
+        if (!nextBilling || Number.isNaN(nextBilling.getTime())) {
             return null;
         }
 
         return formatDateBR(nextBilling);
-    }, [billingCycles, data.billing_cycle_id, data.last_billing]);
+    }, [billingCycles, data.billing_cycle_id, data.last_billing, data.has_free_trial, data.free_trial_days]);
 
     function handleSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -286,19 +294,62 @@ export default function NewSubscription({
                                     </p>
                                 ) : null}
                             </div>
+                            <div>
+                                <label className="flex items-center gap-2 mb-1 block text-sm font-medium text-white">
+                                    Has Free Trial?
+                                    <input
+                                        type="checkbox"
+                                        onChange={(e) =>
+                                            setData('has_free_trial', e.target.checked)
+                                        }
+                                        checked={data.has_free_trial}
+                                    />
+                                    {errors.has_free_trial ? (
+                                        <p className="mt-1 text-sm text-rose-200">
+                                            {errors.has_free_trial}
+                                        </p>
+                                    ) : null}
+                                </label>
 
-                            <div className="flex items-end">
-                                {nextBillingPreview ? (
-                                    <div className="inline-flex w-full items-center justify-between rounded-xl bg-white/5 px-3 py-3 ring-1 ring-white/10">
-                                        <div className="text-sm text-zinc-300">
-                                            Próxima cobrança
-                                        </div>
-                                        <div className="text-sm font-semibold text-white">
-                                            {nextBillingPreview}
-                                        </div>
+                                {data.has_free_trial ? (
+                                    <div className="w-full">
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            max="9999"
+                                            value={data.free_trial_days}
+                                            placeholder='Ex: 7'
+                                            onChange={(e) =>
+                                                setData('free_trial_days', e.target.value)
+                                            }
+                                            className={fieldClass(!!errors.free_trial_days)}
+                                        />
+                                        {errors.free_trial_days ? (
+                                            <p className="mt-1 text-sm text-rose-200">
+                                                {errors.free_trial_days}
+                                            </p>
+                                        ) : null}
                                     </div>
+                                ) : null}
+                            </div>
+
+                            <div>
+                                {nextBillingPreview ? (
+                                    <>
+                                        <label htmlFor="next-billing-preview" className="mb-1 block text-sm font-medium text-white">
+                                            Preview
+                                        </label>
+                                        <div className="inline-flex w-full items-center justify-between rounded-xl bg-white/5 px-3 py-3 ring-1 ring-white/10">
+                                            <div className="text-sm text-zinc-300">
+                                                Próxima cobrança
+                                            </div>
+                                            <div className="text-sm font-semibold text-white">
+                                                {nextBillingPreview}
+                                            </div>
+                                        </div>
+                                    </>
                                 ) : (
-                                    <div className="w-full text-xs text-zinc-400">
+                                    <div className="w-full mb-4 text-center text-xs text-zinc-400">
                                         Selecione o ciclo para prever a próxima
                                         cobrança.
                                     </div>
