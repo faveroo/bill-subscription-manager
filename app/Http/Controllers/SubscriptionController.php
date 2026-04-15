@@ -8,7 +8,9 @@ use App\Models\Category;
 use App\Http\Requests\SubscriptionRequest;
 use App\Models\BillingHistory;
 use App\Models\Subscription;
+use App\Services\BillingHistoryService;
 use App\Services\CheckExpiringSubscriptionService;
+use App\Services\SubscriptionService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -36,14 +38,11 @@ class SubscriptionController extends Controller
         ]);
     }
 
-    public function store(SubscriptionRequest $request)
+    public function store(SubscriptionRequest $request, SubscriptionService $service)
     {
         $data = $request->validated();
-        /** @var \App\Models\User $user */
-        $user = Auth::user();
 
-        $data['last_billing'] = Carbon::parse($data['last_billing'])->addDays(intval($data['free_trial_days'] ?? 0));
-        $subscription = $user->subscriptions()->create($data);
+        $subscription = $service->create($request->user(), $data);
 
         $subscription->billingHistories()->create([
             'user_id' => $subscription->user_id,
@@ -107,7 +106,7 @@ class SubscriptionController extends Controller
         $subscription->update($data);
 
         if ($data['last_billing'] !== $previousLastBilling) {
-            CheckExpiringSubscriptionService::handle();
+            CheckExpiringSubscriptionService::handle($subscription->user);
         }
         return redirect()->route('subscriptions.show', $subscription->id)->with('success', 'Assinatura atualizada com sucesso!');
     }
@@ -122,14 +121,7 @@ class SubscriptionController extends Controller
             return redirect()->back()->withErrors(['error' => 'Assinatura não encontrada']);
         }
 
-        $subscription->update(['is_active' => !$subscription->is_active]);
-
-        $subscription->billingHistories()->create([
-            'user_id' => $subscription->user_id,
-            'event_date' => now('America/Sao_Paulo'),
-            'amount' => $subscription->price,
-            'type' => $subscription->is_active ? 'R' : 'C'
-        ]);
+        SubscriptionService::toggle($subscription);
 
         return redirect()->back()->with(
             'success',
