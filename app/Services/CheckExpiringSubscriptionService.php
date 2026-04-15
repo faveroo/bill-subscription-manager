@@ -2,51 +2,59 @@
 
 namespace App\Services;
 
+use App\Models\User;
 use App\Models\Subscription;
 use App\Notifications\SubscriptionExpiring;
 
 class CheckExpiringSubscriptionService
 {
-    public static function handle(array $daysBefore = [0]): void
+    public static function handle($user, array $daysBefore = [0]): void
     {
-        foreach ($daysBefore as $day) {
-            if(!is_int($day) || $day < 0) {
-                continue;
-            }
+        $user->subscriptions()
+            ->with('user')
+            ->whereNotNull('next_billing_date')
+            ->chunkById(100, function ($subscriptions) use ($daysBefore) {
+                foreach ($subscriptions as $subscription) {
+                    foreach ($daysBefore as $day) {
+                        if (!is_int($day) || $day < 0) {
+                            continue;
+                        }
 
-            Subscription::with('user')
-                ->whereBetween('next_billing_date', [today()->addDays($day)->startOfDay(), today()->addDays($day)->endOfDay()])
-                ->chunkById(100, function ($subscriptions) use ($day) {
-                    foreach ($subscriptions as $subscription) {
-                        $subscription->refresh();
-                        $user = $subscription->user;
+                        if (!$subscription->next_billing_date) {
+                            continue;
+                        }
 
-                        if (!$user) {
+                        $targetDate = today()->addDays($day);
+
+                        if (!$subscription->next_billing_date->isSameDay($targetDate)) {
                             continue;
                         }
 
                         $notifiedDays = $subscription->notified_at ?? [];
 
-                        if(in_array($day, $notifiedDays)) {
+                        if (in_array($day, $notifiedDays)) {
                             continue;
                         }
 
-                        $daysBefore = intVal(max(0, now()->diffInDays($subscription->next_billing_date, false)));
-                        print_r($daysBefore);
+                        $daysUntil = max(
+                            0,
+                            now()->diffInDays($subscription->next_billing_date, false)
+                        );
 
-                        $user->notify(new SubscriptionExpiring(
+                        $subscription->user->notify(new SubscriptionExpiring(
                             subscriptionId: $subscription->id,
                             subscriptionName: $subscription->name,
                             nextBillingDate: (string) $subscription->next_billing_date,
-                            daysBefore: $daysBefore,
+                            daysBefore: $daysUntil,
                         ));
 
                         $notifiedDays[] = $day;
 
-                        $subscription->update(['notified_at' => array_values(array_unique($notifiedDays))]);
+                        $subscription->update([
+                            'notified_at' => array_values(array_unique($notifiedDays))
+                        ]);
                     }
-                return;
-                });
-        }
+                }
+            });
     }
 }
