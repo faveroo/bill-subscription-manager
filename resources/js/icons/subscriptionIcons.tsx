@@ -16,7 +16,7 @@ import {
     FaTwitch,
     FaYoutube,
 } from 'react-icons/fa';
-import { SiNetflix } from 'react-icons/si';
+import { SiNetflix, SiCrunchyroll } from 'react-icons/si';
 
 export function normalizeSubscriptionName(value: string) {
     return value
@@ -31,8 +31,9 @@ export const subscriptionIcons: Record<string, JSX.Element> = {
     'youtube premium': <FaYoutube />,
     'youtube music': <FaYoutube />,
     youtube: <FaYoutube />,
+    crunchyroll: <SiCrunchyroll className='text-orange-500' />,
 
-    netflix: <SiNetflix />,
+    netflix: <SiNetflix className='text-red-500' />,
 
     'prime video': <FaAmazon />,
     'amazon prime': <FaAmazon />,
@@ -53,7 +54,7 @@ export const subscriptionIcons: Record<string, JSX.Element> = {
     github: <FaGithub />,
     gitlab: <FaGitlab />,
 
-    discord: <FaDiscord />,
+    discord: <FaDiscord className='text-[#5865F2]' />,
     slack: <FaSlack />,
     dropbox: <FaDropbox />,
     spotify: <FaSpotify />,
