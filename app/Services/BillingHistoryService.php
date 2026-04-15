@@ -21,6 +21,11 @@ class BillingHistoryService
         $this->create($subscription, $type);
     }
 
+    public function recordPaid(Subscription $subscription): void
+    {
+        $this->create($subscription, BillingHistoryType::PAID);
+    }
+
     private function create(Subscription $subscription, BillingHistoryType $type): void
     {
         $subscription->billingHistories()->create([

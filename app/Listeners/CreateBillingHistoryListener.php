@@ -3,7 +3,9 @@
 namespace App\Listeners;
 
 use App\Events\SubscriptionCreated;
+use App\Events\SubscriptionPaid;
 use App\Events\SubscriptionToggled;
+use App\Events\SubscriptionUpdated;
 use App\Services\BillingHistoryService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -21,10 +23,14 @@ class CreateBillingHistoryListener
     /**
      * Handle the event.
      */
-    public function handle(SubscriptionCreated|SubscriptionToggled $event): void
+    public function handle(SubscriptionCreated|SubscriptionToggled|SubscriptionPaid $event): void
     {
         if ($event instanceof SubscriptionCreated) {
             $this->service->recordCreation($event->subscription);
+        }
+
+        if ($event instanceof SubscriptionPaid) {
+            $this->service->recordPaid($event->subscription);
         }
 
         if ($event instanceof SubscriptionToggled) {

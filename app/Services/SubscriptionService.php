@@ -25,7 +25,7 @@ class SubscriptionService
         });
     }
 
-    public function update(Subscription $subscription, array $data): Subscription
+    public static function update(Subscription $subscription, array $data): Subscription
     {
         $previousLastBilling = optional($subscription->last_billing)->toDateString();
 

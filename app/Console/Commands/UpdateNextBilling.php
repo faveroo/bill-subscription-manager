@@ -2,7 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Events\SubscriptionPaid;
 use App\Models\Subscription;
+use App\Services\SubscriptionService;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
@@ -25,10 +27,6 @@ class UpdateNextBilling extends Command
                     DB::transaction(function () use ($subscription) {
                         $subscription->refresh();
 
-                        if ($this->checkLastBillingDate($subscription)) {
-                            return;
-                        }   
-
                         $nextBillingDate = $this->calculateNextBillingDate(
                             $subscription->next_billing_date,
                             $subscription->billingCycle
@@ -38,17 +36,13 @@ class UpdateNextBilling extends Command
                             return;
                         }
 
-                        $subscription->update([
+                        SubscriptionService::update($subscription, [
                             'last_billing' => $subscription->next_billing_date,
                             'next_billing_date' => $nextBillingDate,
                         ]);
-                    
-                        $subscription->billingHistories()->create([
-                            'user_id' => $subscription->user_id,
-                            'event_date' => now(),
-                            'amount' => $subscription->price,
-                        ]);
-                    });     
+
+                        event(new SubscriptionPaid($subscription));
+                    });
                 }
             });
     }
@@ -62,22 +56,4 @@ class UpdateNextBilling extends Command
             default => null,
         };
     }
-
-    private function checkLastBillingDate(Subscription $subscription): bool
-    {
-        if (!$subscription->last_billing  || !$subscription->next_billing_date) {
-            return false;
-        }
-
-        return $subscription->last_billing_date > now();
-    }
-
-    // private function persistHistory(Subscription $subscription): void
-    // {
-    //     $subscription->billingHistories()->create([
-    //         'user_id' => $subscription->user_id,
-    //         'billing_date' => $subscription->next_billing_date,
-    //         'amount' => $subscription->price,
-    //     ]);
-    // }
 }
