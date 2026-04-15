@@ -44,13 +44,6 @@ class SubscriptionController extends Controller
 
         $subscription = $service->create($request->user(), $data);
 
-        $subscription->billingHistories()->create([
-            'user_id' => $subscription->user_id,
-            'event_date' => now('America/Sao_Paulo'),
-            'amount' => $subscription->price,
-            'type' => 'A'
-        ]);
-
         return redirect()->route('subscriptions.show', $subscription->id)->with('success', 'Assinatura criada com sucesso!');
     }
 
