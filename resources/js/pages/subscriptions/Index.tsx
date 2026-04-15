@@ -15,7 +15,7 @@ export default function Assinaturas() {
     const [billingCycleFilter, setBillingCycleFilter] = useState('');
     const [dateFilter, setDateFilter] = useState('');
     const [categoryFilter, setCategoryFilter] = useState('');
-    const [activeFilter, setActiveFilter] = useState(false);
+    const [activeFilter, setActiveFilter] = useState(true);
 
     const money = useMemo(
         () =>
@@ -42,7 +42,7 @@ export default function Assinaturas() {
         const matchesCategory = categoryFilter
             ? sub.category?.name === categoryFilter
             : true;
-        
+
         const matchesActive = activeFilter ? sub.is_active : true;
 
         return (
@@ -148,7 +148,7 @@ export default function Assinaturas() {
                         </select>
 
                         <label htmlFor="active-filter" className="flex items-center gap-3 px-3 py-2 bg-zinc-800 rounded-xl cursor-pointer ring-1 ring-white/10">
-                            <input 
+                            <input
                                 type="checkbox"
                                 id="active-filter"
                                 checked={activeFilter}
