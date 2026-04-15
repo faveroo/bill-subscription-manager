@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SubscriptionEditRequest;
 use App\Models\BillingCycle;
 use App\Models\Category;
 use App\Http\Requests\SubscriptionRequest;
@@ -87,7 +88,7 @@ class SubscriptionController extends Controller
         ]);
     }
 
-    public function update(SubscriptionRequest $request, $id)
+    public function update(SubscriptionEditRequest $request, $id)
     {
         $data = $request->validated();
 
