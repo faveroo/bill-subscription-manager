@@ -28,9 +28,9 @@ export function normalizeSubscriptionName(value: string) {
 }
 
 export const subscriptionIcons: Record<string, JSX.Element> = {
-    'youtube premium': <FaYoutube />,
-    'youtube music': <FaYoutube />,
-    youtube: <FaYoutube />,
+    'youtube premium': <FaYoutube className='text-red-500' />,
+    'youtube music': <FaYoutube className='text-red-500' />,
+    youtube: <FaYoutube className='text-red-500' />,
     crunchyroll: <SiCrunchyroll className='text-orange-500' />,
 
     netflix: <SiNetflix className='text-red-500' />,
@@ -57,10 +57,10 @@ export const subscriptionIcons: Record<string, JSX.Element> = {
     discord: <FaDiscord className='text-[#5865F2]' />,
     slack: <FaSlack />,
     dropbox: <FaDropbox />,
-    spotify: <FaSpotify />,
+    spotify: <FaSpotify className='text-green-500' />,
     paypal: <FaPaypal />,
-    twitch: <FaTwitch />,
-    steam: <FaSteam />,
+    twitch: <FaTwitch className='text-[#9147FF]' />,
+    steam: <FaSteam className='text-[#1b2838]' />,
 };
 
 const subscriptionIconEntries = Object.entries(subscriptionIcons).sort(

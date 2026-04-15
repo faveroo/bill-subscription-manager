@@ -98,7 +98,7 @@ export default function NewSubscription({
         }
 
         const trialDays = data.has_free_trial && data.free_trial_days ? Number(data.free_trial_days) : 0;
-        
+
         if (trialDays > 9999) {
             return 'Data inválida (valor muito alto)';
         }
@@ -139,14 +139,16 @@ export default function NewSubscription({
                         </p>
                     </div>
 
-                    <div className="shrink-0">
-                        <div className="rounded-xl bg-white/5 p-3 text-zinc-200 ring-1 ring-white/10">
-                            {getSubscriptionIcon(data.name, {
-                                size: 26,
-                                title: data.name || 'Assinatura',
-                            })}
+                    {data.name && (
+                        <div className="shrink-0">
+                            <div className="rounded-xl bg-white/2 p-3 text-zinc-200 ring-1 ring-white/5">
+                                {getSubscriptionIcon(data.name, {
+                                    size: 26,
+                                    title: data.name || 'Assinatura',
+                                })}
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
 
                 <div className="rounded-xl border border-white/10 bg-zinc-900/35 p-6 shadow-sm shadow-black/30 ring-1 ring-white/5">
