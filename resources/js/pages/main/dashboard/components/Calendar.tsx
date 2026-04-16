@@ -62,8 +62,7 @@ export default function MyCalendar( { events } : MyCalendarProps ) {
                 
                 if(!items) return;
                 
-                const icons = items?.map(e => getSubscriptionIcon(e.label));
-                
+                const icons = items?.map(e => getSubscriptionIcon(e.label)).filter(item => item !== null);
                 return (
                     <div className="absolute bottom-1 right-1 flex items-center">
                 <div className="flex -space-x-2">
