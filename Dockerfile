@@ -1,4 +1,4 @@
-FROM php:8.3-cli
+FROM php:8.5-cli
 
 RUN apt-get update && apt-get install -y \
     git unzip curl libzip-dev libonig-dev libxml2-dev \
@@ -11,6 +11,9 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 COPY . .
+
+RUN npm install
+RUN npm run build
 
 RUN COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --optimize-autoloader -vvv
 
