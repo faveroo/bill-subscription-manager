@@ -24,14 +24,12 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www
 COPY . .
 
-# 5. .env
-RUN cp .env.example .env || true
-
 # 6. Laravel deps
 RUN COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --optimize-autoloader
 
 # 7. Key
 RUN php artisan key:generate || true
+RUN php artisan migrate --force
 
 # 8. Frontend
 RUN npm install
