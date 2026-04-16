@@ -1,40 +1,46 @@
 FROM php:8.5-cli
 
-# Instala dependências + Node (versão melhor)
+# 1. Dependências do sistema
 RUN apt-get update && apt-get install -y \
-    git unzip curl libzip-dev libonig-dev libxml2-dev \
+    git unzip curl \
+    libzip-dev libonig-dev libxml2-dev \
     libpng-dev libjpeg-dev libfreetype6-dev libicu-dev \
-    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install \
-        pdo pdo_pgsql pdo_mysql mbstring zip exif pcntl bcmath gd intl
+    libpq-dev
 
-# Composer
+# 2. Node (versão 20)
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs
+
+# 3. Extensões PHP
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg
+
+RUN docker-php-ext-install \
+    pdo pdo_pgsql pdo_mysql \
+    mbstring zip exif pcntl bcmath gd intl
+
+# 4. Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 COPY . .
 
-# Garante .env
+# 5. .env
 RUN cp .env.example .env || true
 
-# Instala backend primeiro
+# 6. Laravel deps
 RUN COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --optimize-autoloader
 
-# Gera chave da aplicação
+# 7. Key
 RUN php artisan key:generate || true
 
-# Build frontend
+# 8. Frontend
 RUN npm install
 RUN npm run build
 
-# Permissões
+# 9. Permissões
 RUN chmod -R 775 storage bootstrap/cache
 
-# Limpa e otimiza Laravel
-RUN php artisan config:clear
-RUN php artisan cache:clear
+# 10. Cache
 RUN php artisan config:cache
 RUN php artisan route:cache
 RUN php artisan view:cache
