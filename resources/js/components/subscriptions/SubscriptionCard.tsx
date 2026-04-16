@@ -46,7 +46,6 @@ export default function SubscriptionCard({
     const icon = getSubscriptionIcon(subscription.name, {
         size: 22,
         title: subscription.name,
-        className: 'text-zinc-100',
     });
 
     const nextBillingDate = parseDateOnly(subscription.next_billing_date);
