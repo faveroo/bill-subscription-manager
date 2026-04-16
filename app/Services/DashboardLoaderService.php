@@ -10,11 +10,24 @@ class DashboardLoaderService
 {
     public function load(): array
     {
-        
+        $subscriptions = Auth::user()->subscriptions()->where('is_active', true)->get();
+        $events = [];
+        foreach($subscriptions as $subscription) {
+            $date = $subscription->next_billing_date;
+            $date = $date->toDateString();
+            
+            $events[$date][] = [
+                'label' => $subscription->name,
+                'type' => 'payable'
+            ];
+        }
+
+
         return [
             'subscriptions' => User::find(Auth::id())->subscriptions()->where('next_billing_date', '<=', Carbon::now()->addDays(10))->with('billingCycle')->get()->toArray(),
             'totalSubscriptions' => $this->totalSubscriptions(),
             'valueOfSubscriptions' => $this->valueOfSubscriptions(),
+            'events' => $events
         ];
     }
 
