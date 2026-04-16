@@ -10,7 +10,6 @@ type MyCalendarProps = {
 
 export default function MyCalendar( { events } : MyCalendarProps ) {
   const [date, setDate] = useState(new Date());
-  console.log(events);
 
   function formatDate(d: Date) {
     return d.toISOString().split("T")[0];
