@@ -18,6 +18,7 @@ WORKDIR /var/www
 COPY . .
 
 RUN COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --optimize-autoloader --no-scripts
+RUN php artisan wayfinder:generate --with-form
 
 # 🔥 Build do frontend
 RUN npm install && npm run build
