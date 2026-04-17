@@ -19,8 +19,7 @@ COPY . .
 
 RUN COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --optimize-autoloader
 
-RUN npm install
-RUN npm run build
+RUN npm install && npm run build
 
 RUN chmod -R 775 storage bootstrap/cache
 
