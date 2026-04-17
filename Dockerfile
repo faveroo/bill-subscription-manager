@@ -19,12 +19,17 @@ COPY . .
 
 RUN COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --optimize-autoloader
 
+# 🔥 Build do frontend
 RUN npm install && npm run build
-RUN chmod -R 755 public
 
-RUN chmod -R 775 storage bootstrap/cache
+# 🔥 Permissões corretas
+RUN chown -R www-data:www-data storage bootstrap/cache
 
+# 🔥 Limpar e cachear config
 RUN php artisan config:clear
+RUN php artisan config:cache
+RUN php artisan route:cache
+RUN php artisan view:cache
 
 EXPOSE 10000
 
