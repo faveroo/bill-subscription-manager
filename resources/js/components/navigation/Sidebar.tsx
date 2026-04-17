@@ -7,6 +7,10 @@ type SidebarItem = {
   href: string;
 };
 
+type SidebarProps = {
+  isMobileOpen: boolean;
+  onClose: () => void;
+};
 
 function Icon({ children, title }: { children: ReactNode; title?: string }) {
   return (
@@ -75,7 +79,7 @@ const labelsByHref: Record<string, string> = {
   "/settings": "Configurações",
 };
 
-export default function Sidebar() {
+export default function Sidebar({ isMobileOpen, onClose }: SidebarProps) {
   const { url } = usePage();
   const [pendingUrl, setPendingUrl] = useState<string | null>(null);
   const current = pendingUrl ?? url;
@@ -91,28 +95,45 @@ export default function Sidebar() {
     { label: "Configurações", href: "/settings" },
   ];
 
-  return (
-    <aside
-      className={`h-screen bg-zinc-600 border-r transition-all duration-300 flex flex-col ${open ? "w-54" : "w-20"
-        }`}
-    >
+  const navContent = (isMobile: boolean) => (
+    <>
       {/* Logo */}
-      <div className="h-16 flex items-center justify-center border-b">
+      <div className="h-16 flex items-center justify-between px-4 border-b border-white/10">
         <span className="text-xl font-bold text-white">
-          <Link href="/dashboard">{open ? "SubManager" : "$"}</Link>
+          <Link href="/dashboard" onClick={isMobile ? onClose : undefined}>
+            {!isMobile && !open ? "$" : "SubManager"}
+          </Link>
         </span>
+        {isMobile && (
+          <button
+            onClick={onClose}
+            className="p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+            aria-label="Fechar menu"
+          >
+            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+              <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
+          </button>
+        )}
       </div>
 
       {/* Menu */}
-      <nav className="flex-1 p-5 gap-5 flex flex-col">
+      <nav className="flex-1 p-4 gap-2 flex flex-col">
         {items.map((item) => (
-          <Link href={item.href} key={item.href} onClick={() => setPendingUrl(item.href)}>
-            <div className={`flex items-center gap-5 px-2 py-3 rounded cursor-pointer hover:bg-zinc-500 transition-colors ${isActive(item.href) ? "bg-zinc-700 transition" : ""}`}>
-              <span className={`grid place-items-center ${!open ? "w-full" : ""}`}>
+          <Link
+            href={item.href}
+            key={item.href}
+            onClick={() => {
+              setPendingUrl(item.href);
+              if (isMobile) onClose();
+            }}
+          >
+            <div className={`flex items-center gap-4 px-3 py-3 rounded-xl cursor-pointer hover:bg-zinc-500 transition-colors ${isActive(item.href) ? "bg-zinc-700" : ""}`}>
+              <span className={`grid place-items-center ${!isMobile && !open ? "w-full" : ""}`}>
                 {iconsByHref[item.href]}
               </span>
-              {open && (
-                <span className="text-sm text-white">
+              {(isMobile || open) && (
+                <span className="text-sm font-medium text-white">
                   {labelsByHref[item.href]}
                 </span>
               )}
@@ -121,13 +142,42 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      {/* Toggle */}
-      <button
-        onClick={() => setOpen(!open)}
-        className="m-3 p-2 border rounded text-sm hover:bg-zinc-500 transition-colors text-white"
+      {/* Toggle — apenas desktop */}
+      {!isMobile && (
+        <button
+          onClick={() => setOpen(!open)}
+          className="m-3 p-2 border border-white/10 rounded-lg text-sm hover:bg-zinc-500 transition-colors text-white"
+        >
+          {open ? "Fechar" : "Abrir"}
+        </button>
+      )}
+    </>
+  );
+
+  return (
+    <>
+      {/* ── Desktop Sidebar ── */}
+      <aside
+        className={`hidden md:flex h-screen bg-zinc-600 border-r border-white/10 transition-all duration-300 flex-col ${open ? "w-56" : "w-20"}`}
       >
-        {open ? "Fechar" : "Abrir"}
-      </button>
-    </aside>
+        {navContent(false)}
+      </aside>
+
+      {/* ── Mobile Off-canvas Overlay ── */}
+      {isMobileOpen && (
+        <div className="md:hidden fixed inset-0 z-50 flex">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={onClose}
+            aria-hidden="true"
+          />
+          {/* Drawer Panel */}
+          <aside className="relative z-10 flex flex-col w-72 max-w-[80vw] h-full bg-zinc-800 shadow-2xl">
+            {navContent(true)}
+          </aside>
+        </div>
+      )}
+    </>
   );
 }

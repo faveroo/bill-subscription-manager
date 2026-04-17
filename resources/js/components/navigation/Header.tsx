@@ -35,7 +35,7 @@ function getCsrfToken(): string {
     );
 }
 
-export default function Header() {
+export default function Header({ onOpenSidebar }: { onOpenSidebar: () => void }) {
     const { props } = usePage<PageProps>();
     const success = props.flash?.success;
     const error = props.flash?.error;
@@ -227,7 +227,19 @@ export default function Header() {
 
     return (
         <>
-            <header className="flex h-16 items-center justify-end border-b bg-zinc-600 px-6">
+            <header className="flex h-16 items-center justify-between border-b bg-zinc-600 px-4 md:px-6">
+                {/* Hamburger — mobile only */}
+                <button
+                    type="button"
+                    className="md:hidden p-2 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+                    aria-label="Abrir menu"
+                    onClick={onOpenSidebar}
+                >
+                    <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+                        <path d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+
                 <div className="flex items-center gap-4">
                     <div className="relative">
                         <button
@@ -248,35 +260,48 @@ export default function Header() {
                         </button>
 
                         {isOpen && (
-                            <div
-                                ref={menuRef}
-                                role="menu"
-                                aria-label="Notificações"
-                                className="absolute right-0 mt-2 w-[min(420px,calc(100vw-3rem))] overflow-hidden rounded-xl border border-white/10 bg-zinc-900/95 shadow-xl backdrop-blur"
-                            >
-                                <div className="flex items-center justify-between gap-3 border-b border-white/10 px-4 py-3">
-                                    <div className="min-w-0">
-                                        <div className="text-sm font-semibold text-white">
-                                            Notificações
-                                        </div>
-                                        <div className="text-xs text-zinc-300">
-                                            {unreadCount > 0
-                                                ? `${unreadCount} não lida(s)`
-                                                : 'Tudo em dia'}
-                                        </div>
+                            <>
+                                {/* Mobile backdrop */}
+                                <div
+                                    className="fixed inset-0 z-40 bg-black/50 md:hidden"
+                                    onClick={() => setIsOpen(false)}
+                                    aria-hidden="true"
+                                />
+
+                                <div
+                                    ref={menuRef}
+                                    role="menu"
+                                    aria-label="Notificações"
+                                    className="fixed inset-x-0 bottom-0 z-50 overflow-hidden rounded-t-2xl border-t border-white/10 bg-zinc-900/95 shadow-xl backdrop-blur md:absolute md:inset-x-auto md:bottom-auto md:right-0 md:top-full md:mt-2 md:w-[420px] md:rounded-xl md:border"
+                                >
+                                    {/* Drag handle — mobile only */}
+                                    <div className="flex justify-center pt-3 pb-1 md:hidden">
+                                        <div className="h-1 w-10 rounded-full bg-white/20" />
                                     </div>
 
-                                    <button
-                                        type="button"
-                                        onClick={() => void markAllAsRead()}
-                                        className="shrink-0 rounded-lg px-2 py-1 text-xs font-medium text-white/90 ring-1 ring-white/10 hover:bg-white/10 focus:ring-2 focus:ring-white/20 focus:outline-none"
-                                        disabled={unreadCount === 0}
-                                    >
-                                        Marcar tudo como lido
-                                    </button>
-                                </div>
+                                    <div className="flex items-center justify-between gap-3 border-b border-white/10 px-4 py-3">
+                                        <div className="min-w-0">
+                                            <div className="text-sm font-semibold text-white">
+                                                Notificações
+                                            </div>
+                                            <div className="text-xs text-zinc-300">
+                                                {unreadCount > 0
+                                                    ? `${unreadCount} não lida(s)`
+                                                    : 'Tudo em dia'}
+                                            </div>
+                                        </div>
 
-                                <div className="max-h-[420px] overflow-auto">
+                                        <button
+                                            type="button"
+                                            onClick={() => void markAllAsRead()}
+                                            className="shrink-0 rounded-lg px-2 py-1 text-xs font-medium text-white/90 ring-1 ring-white/10 hover:bg-white/10 focus:ring-2 focus:ring-white/20 focus:outline-none"
+                                            disabled={unreadCount === 0}
+                                        >
+                                            Marcar tudo como lido
+                                        </button>
+                                    </div>
+
+                                <div className="max-h-[60vh] md:max-h-[420px] overflow-auto">
                                     {isLoadingNotifications ? (
                                         <div className="px-4 py-6 text-sm text-zinc-300">
                                             Carregando…
@@ -341,7 +366,8 @@ export default function Header() {
                                         </ul>
                                     )}
                                 </div>
-                            </div>
+                                </div>
+                            </>
                         )}
                     </div>
 

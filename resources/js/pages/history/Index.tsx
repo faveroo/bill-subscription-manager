@@ -72,23 +72,28 @@ export default function Historico() {
                                     return (
                                         <div
                                             key={item.id}
-                                            className="grid grid-cols-5 items-center p-3 gap-3 text-white bg-zinc-800 rounded-md hover:bg-zinc-900 transition-colors"
+                                            className="flex flex-col gap-2 p-4 text-white bg-zinc-800 rounded-md hover:bg-zinc-900 transition-colors cursor-pointer"
                                             onClick={() => window.location.href = `/subscriptions/${item.subscription.id}/history`}
                                         >
-                                            <div className="col-span-3 font-semibold text-xl">
-                                                <span className="flex items-center gap-2">{getSubscriptionIcon(item.subscription.name)} {item.subscription.name}</span>
+                                            {/* Top row: name + badge */}
+                                            <div className="flex items-center justify-between gap-3 flex-wrap">
+                                                <div className="font-semibold text-base flex items-center gap-2 min-w-0">
+                                                    <span className="shrink-0">{getSubscriptionIcon(item.subscription.name)}</span>
+                                                    <span className="truncate">{item.subscription.name}</span>
+                                                </div>
+
+                                                <div className={`shrink-0 text-xs px-2.5 py-1 rounded-full ${meta.className}`}>
+                                                    {meta.label}
+                                                </div>
                                             </div>
 
-                                            <div className={`text-center col-span-2 text-xs px-2 py-1 rounded-full ${meta.className}`}>
-                                                {meta.label}
-                                            </div>
-
-                                            <div className="grid grid-cols-2 border-t pt-2 border-zinc-400 col-span-5">
-                                                <div className="text-xs text-left text-zinc-400">
+                                            {/* Bottom row: description + date */}
+                                            <div className="flex items-center justify-between gap-3 border-t border-zinc-400/40 pt-2 flex-wrap">
+                                                <div className="text-xs text-zinc-400">
                                                     {meta.description(item, item.subscription.billing_cycle?.name)}
                                                 </div>
 
-                                                <div className="text-xs text-right text-zinc-400">
+                                                <div className="text-xs text-zinc-400 shrink-0">
                                                     {formatDate(item.event_date)}
                                                 </div>
                                             </div>
