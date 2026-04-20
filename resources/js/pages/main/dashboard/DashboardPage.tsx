@@ -100,14 +100,19 @@ export default function DashboardPage() {
                         "shadow-xl"
                     )}
                 >
-                    <div className="mb-4">
+                    <div className="mb-4 flex justify-between">
                         <h2 className="text-lg font-semibold text-white">
                             Agenda Mensal - 
-                            <span className="ml-3 text-sm text-zinc-400">
+                            <span className="ml-1 text-sm text-zinc-400">
                                 Cobranças, assinaturas e eventos próximos
                             </span>
                         </h2>
+                        <div className="flex items-center gap-2">
+                            <div className="rounded-full bg-rose-500/20 h-4 w-6" />
+                            <span className="text-zinc-400 text-xs">Assinaturas a pagar</span>
+                        </div>
                     </div>
+
 
                     <div className="w-full overflow-x-auto">
                         <MyCalendar events={eventos}/>
