@@ -97,7 +97,7 @@ export default function SubscriptionInfo() {
         <>
             <Head title={`Assinatura • ${subscription.name}`} />
 
-            <div className="mx-auto w-full max-w-4xl space-y-4">
+            <div className="w-full max-w-4xl space-y-4">
                 <div className="flex items-center justify-between gap-3">
                     <div className="min-w-0">
                         <div className="flex items-center gap-3">
@@ -131,18 +131,18 @@ export default function SubscriptionInfo() {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-6 gap-5 sm:grid-cols-6">
-                    <div className="rounded-xl col-span-2 border border-zinc-700 bg-zinc-800 p-4">
+                <div className="grid md:grid-cols-6 gap-5 grid-cols-2">
+                    <div className="rounded-xl md:col-span-2 col-span-1 border border-zinc-700 bg-zinc-800 p-4">
                         <p className="text-sm text-zinc-300">Preço</p>
                         <p className="mt-1 text-2xl font-semibold text-white">
                             {formatCurrencyBRL(subscription.price)}  <span className="text-zinc-400 text-xs">{subscription.billing_cycle?.name}</span>
                         </p>
                     </div>
 
-                    <div className="rounded-xl col-span-2 border border-zinc-700 bg-zinc-800 p-4">
+                    <div className="rounded-xl md:col-span-2 col-span-1 border border-zinc-700 bg-zinc-800 p-4">
                         <p className="text-sm text-zinc-300">Total pago</p>
                         <p className="mt-1 text-2xl font-semibold text-white">
-                            {formatCurrencyBRL(subscription.total_paid)}
+                            {formatCurrencyBRL(subscription.total_paid)} <span className='text-zinc-400 text-xs'>Total</span>
                         </p>
                     </div>
 
@@ -154,14 +154,14 @@ export default function SubscriptionInfo() {
                             {billingCycleName}
                         </p>
                     </div>
-                    <div className="rounded-xl col-span-3 border border-zinc-700 bg-zinc-800 p-4">
+                    <div className="rounded-xl md:col-span-3 col-span-2 border border-zinc-700 bg-zinc-800 p-4">
                         <p className="text-sm text-zinc-300">Última cobrança</p>
                         <p className="mt-1 text-xl font-semibold text-white">
                             {formatted}
                         </p>
                     </div>
 
-                    <div className="rounded-xl border col-span-3 border-zinc-700 bg-zinc-800 p-4">
+                    <div className="rounded-xl border md:col-span-3 col-span-2 border-zinc-700 bg-zinc-800 p-4">
                         <p className="text-sm text-zinc-300">
                             Próxima cobrança
                         </p>
