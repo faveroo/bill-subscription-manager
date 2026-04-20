@@ -1,5 +1,5 @@
-import { usePage, Link } from '@inertiajs/react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { usePage, Link, useForm } from '@inertiajs/react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import type { AppNotification, PageProps } from '@/types';
 
 type FlashToast = {
@@ -54,6 +54,13 @@ export default function Header({ onOpenSidebar }: { onOpenSidebar: () => void })
 
     const menuRef = useRef<HTMLDivElement | null>(null);
     const buttonRef = useRef<HTMLButtonElement | null>(null);
+
+    const { post, processing } = useForm();
+
+    function submitLogout(e : React.FormEvent) {
+        e.preventDefault();
+        post('/logout');
+    }
 
     const dateTime = useMemo(
         () =>
@@ -251,9 +258,9 @@ export default function Header({ onOpenSidebar }: { onOpenSidebar: () => void })
                             aria-expanded={isOpen}
                             onClick={() => void toggleMenu()}
                         >
-                            <BellIcon className="h-5 w-5" />
+                            <BellIcon className="h-5 w-5 hover:text-yellow-400" />
                             {unreadCount > 0 && (
-                                <span className="absolute -top-1 -right-1 inline-flex min-w-5 items-center justify-center rounded-full bg-rose-500 px-1.5 text-[11px] font-semibold leading-5 text-white">
+                                <span className="absolute -top-1 -right-1 inline-flex items-center justify-center rounded-full bg-rose-500 px-1.5 text-[11px] font-semibold leading-5 text-white">
                                     {unreadCount > 99 ? '99+' : unreadCount}
                                 </span>
                             )}
@@ -370,6 +377,39 @@ export default function Header({ onOpenSidebar }: { onOpenSidebar: () => void })
                             </>
                         )}
                     </div>
+
+                    <form onSubmit={submitLogout}>
+                            <button
+                                disabled={processing}
+                                type="submit"
+                                className="
+                                flex items-center gap-2
+                                p-2.5
+                                
+                                rounded-lg
+                                ring-1 ring-white/10 hover:bg-white/10 hover:text-rose-400 focus:ring-2 focus:ring-white/20 focus:outline-none
+                                cursor-pointer
+                                text-white
+                                transition-all duration-200
+                                active:scale-95
+                                disabled:opacity-50 disabled:cursor-not-allowed
+                                "
+                            >
+                                <svg
+                                width="16"
+                                height="16"
+                                viewBox="0 0 15 15"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="stroke-current"
+                                >
+                                <path
+                                    d="M13.5 7.5L10.5 10.75M13.5 7.5L10.5 4.5M13.5 7.5L4 7.5M8 13.5H1.5L1.5 1.5L8 1.5"
+                                    strokeWidth="1.5"
+                                />
+                                </svg>
+                            </button>
+                        </form>
 
                         <Link href="/profile" className="text-sm flex items-center gap-2 text-white hover:underline">
                         <div className="h-8 w-8 rounded-full bg-gray-300" />
