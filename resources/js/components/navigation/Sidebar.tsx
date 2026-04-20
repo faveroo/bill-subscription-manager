@@ -98,7 +98,7 @@ export default function Sidebar({ isMobileOpen, onClose }: SidebarProps) {
   const navContent = (isMobile: boolean) => (
     <>
       {/* Logo */}
-      <div className="h-16 flex items-center justify-between px-4 border-b border-white/10">
+      <div className="h-16 flex items-center justify-center px-4 border-b border-white/10">
         <span className="text-xl font-bold text-white">
           <Link href="/dashboard" onClick={isMobile ? onClose : undefined}>
             {!isMobile && !open ? "$" : "SubManager"}

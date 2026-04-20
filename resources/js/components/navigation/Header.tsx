@@ -227,7 +227,7 @@ export default function Header({ onOpenSidebar }: { onOpenSidebar: () => void })
 
     return (
         <>
-            <header className="flex h-16 items-center justify-between border-b bg-zinc-600 px-4 md:px-6">
+            <header className="flex h-16 items-center justify-between md:justify-end border-b bg-zinc-600 px-3 md:px-6">
                 {/* Hamburger — mobile only */}
                 <button
                     type="button"
@@ -240,7 +240,7 @@ export default function Header({ onOpenSidebar }: { onOpenSidebar: () => void })
                     </svg>
                 </button>
 
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3">
                     <div className="relative">
                         <button
                             ref={buttonRef}
@@ -371,12 +371,10 @@ export default function Header({ onOpenSidebar }: { onOpenSidebar: () => void })
                         )}
                     </div>
 
-                    <div className="flex items-center gap-2">
+                        <Link href="/profile" className="text-sm flex items-center gap-2 text-white hover:underline">
                         <div className="h-8 w-8 rounded-full bg-gray-300" />
-                        <Link href="/profile" className="text-sm text-white hover:underline">
-                            {userName}
+                            <span className='hidden md:block'>{userName}</span>
                         </Link>
-                    </div>
                 </div>
             </header>
 
