@@ -22,7 +22,7 @@ export default function Profile() {
                         </div>
                     </div>
 
-                    <div className="mt-6 p-5 rounded-2xl bg-zinc-900/10 space-y-4 mx-12">
+                    <div className="mt-6 p-5 rounded-2xl bg-zinc-900/10 space-y-4 md:mx-12">
                         <h1 className="text-2xl text-white font-bold text-center">
                             Informations
                         </h1>
