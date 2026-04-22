@@ -45,8 +45,9 @@ export default function DashboardPage() {
 
     const userName = (props as any)?.auth?.user?.name as string | undefined;
 
-    const activeCount = props.totalSubscriptions || 0;
+    const activeCount = props.totalSubscriptions ?? 0;
     const totalMonthly = props.valueOfSubscriptions ?? 0;
+    const totalAnnually = props.totalAnnually ?? 0
 
     return (
         <div className="space-y-10 text-zinc-100">
@@ -138,14 +139,14 @@ export default function DashboardPage() {
                     accent="sky"
                 />
 
-                {/* Reserved for future insights
+                {/* Reserved for future insights */}
                 <MetricCard
-                    label="Em breve"
-                    value="—"
-                    helper="Alertas e previsões"
+                    label="Total anual"
+                    value={money.format(totalAnnually)}
+                    helper="Total gasto no ano"
                     icon={<IconAlert className="h-5 w-5" />}
-                    accent="zinc"
-                /> */}
+                    accent="rose"
+                />
             </section>
 
             {/* Subscriptions List */}

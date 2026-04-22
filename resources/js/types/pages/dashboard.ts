@@ -6,6 +6,7 @@ export type PageProps = {
     subscriptions?: Subscription[];
     totalSubscriptions?: number;
     valueOfSubscriptions?: number;
+    totalAnnually?: number;
     auth?: auth;
     events: Record<string, Evento[]>;
 };
