@@ -1,4 +1,5 @@
-import { Head, Link, router, usePage } from '@inertiajs/react';
+import { Head, router, usePage } from '@inertiajs/react';
+import { Link } from '@/components/ui/Link';
 import type { ReactNode } from 'react';
 import { getSubscriptionIcon } from '@/icons/subscriptionIcons';
 import { getSubsUrl } from '@/lib/subsUrl';
@@ -103,7 +104,8 @@ export default function SubscriptionInfo() {
                         <div className="flex items-center gap-3">
                             <Link
                                 href="/subscriptions"
-                                className="rounded border border-zinc-500/70 px-3 py-1 text-sm text-white transition-colors hover:border-zinc-400"
+                                variant='secondary'
+                                className="px-3 py-1 text-sm text-white transition-colors"
                             >
                                 Voltar
                             </Link>
@@ -175,31 +177,16 @@ export default function SubscriptionInfo() {
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                         <div className="text-sm text-zinc-300">Ações</div>
                         <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
-                            <Link
-                                href={`/subscriptions/${subscription.id}/edit/`}
-                                className="rounded border border-blue-600 px-4 py-2 text-center text-sm text-white transition-colors hover:bg-blue-600"
-                            >
-                                Editar
-                            </Link>
-                            {url && (
-                                <a
-                                    href={url}
-                                    target="_blank"
-                                    className="rounded border border-cyan-700 px-4 py-2 text-center text-sm text-white transition-colors hover:bg-cyan-700"
-                                >
-                                    Acessar Assinatura
-                                </a>
-                            )}
-                            <Link
-                                href={`/subscriptions/${subscription.id}/history/`}
-                                className="rounded border border-emerald-700 px-4 py-2 text-center text-sm text-white transition-colors hover:bg-emerald-700"
-                            >
-                                Histórico de cobranças
-                            </Link>
+                            <Link href={`/subscriptions/${subscription.id}/edit/`} > Editar </Link>
+
+                            <Link href={`/subscriptions/${subscription.id}/history/`} > Histórico de cobranças </Link>
+
+                            {url && (<Link href={url} > Acessar Assinatura </Link> )}
+                            
                             <button
                                 type="button"
                                 onClick={handleToggleActive}
-                                className={`rounded border px-4 py-2 text-sm text-white transition-colors ${subscription.is_active ? 'hover:bg-red-700 border-red-700' : 'hover:bg-green-700 border-green-700'}`}
+                                className={`rounded border cursor-pointer px-4 py-2 text-sm text-white transition-colors ${subscription.is_active ? 'hover:bg-red-700 hover:border-red-700 border-zinc-600' : 'hover:bg-green-700 border-green-700'}`}
                             >
                                 {subscription.is_active
                                     ? 'Inativar assinatura'
