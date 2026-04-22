@@ -97,7 +97,7 @@ export default function SubscriptionInfo() {
         <>
             <Head title={`Assinatura • ${subscription.name}`} />
 
-            <div className="w-full max-w-4xl space-y-4">
+            <div className="w-full mx-auto max-w-4xl space-y-4">
                 <div className="flex items-center justify-between gap-3">
                     <div className="min-w-0">
                         <div className="flex items-center gap-3">
