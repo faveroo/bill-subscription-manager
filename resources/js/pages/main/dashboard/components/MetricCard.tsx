@@ -25,13 +25,13 @@ export function MetricCard({
 
     return (
         <Card className="p-5">
-            <div className="flex items-start justify-between gap-4">
-                <div>
+            <div className="flex items-start justify-between">
+                <div >
                     <p className="text-sm text-zinc-300">{label}</p>
                     <p className="mt-2 text-3xl font-semibold tracking-wide text-white">{value}</p>
                     {helper ? <p className="mt-1 text-xs text-zinc-400">{helper}</p> : null}
                 </div>
-                <div className={cn("rounded-xl p-3 ring-1", accentClasses)}>{icon}</div>
+                <div className={cn("rounded-xl p-2 ring-2", accentClasses)}>{icon}</div>
             </div>
         </Card>
     );
