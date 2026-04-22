@@ -3,7 +3,7 @@ import type { PageProps } from "@/types/pages/dashboard";
 import { Subscription } from "@/types/model/subscription";
 
 import { Card } from "./components/Card";
-import { IconAlert, IconArrowRight, IconPlus, IconSpark, IconWallet } from "./components/Icons";
+import { IconAlert, IconArrowRight, IconPlus, IconSpark, IconWallet, IconAnnualTotal } from "./components/Icons";
 import { MetricCard } from "./components/MetricCard";
 import { cn } from "./lib/cn";
 import { parseDateOnly } from "./lib/date";
@@ -144,7 +144,7 @@ export default function DashboardPage() {
                     label="Total anual"
                     value={money.format(totalAnnually)}
                     helper="Total gasto no ano"
-                    icon={<IconAlert className="h-5 w-5" />}
+                    icon={<IconAnnualTotal className="h-5 w-5" />}
                     accent="rose"
                 />
             </section>
