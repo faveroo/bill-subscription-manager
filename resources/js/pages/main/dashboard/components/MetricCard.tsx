@@ -24,7 +24,7 @@ export function MetricCard({
               : "text-rose-200 bg-rose-500/10 ring-rose-500/20";
 
     return (
-        <Card className="p-5">
+        <Card className="py-5 px-4">
             <div className="flex items-start justify-between">
                 <div >
                     <p className="text-sm text-zinc-300">{label}</p>
