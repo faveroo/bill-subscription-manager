@@ -39,6 +39,7 @@ class UpdateNextBilling extends Command
                         SubscriptionService::update($subscription, [
                             'last_billing' => $subscription->next_billing_date,
                             'next_billing_date' => $nextBillingDate,
+                            'notified_at' => null
                         ]);
 
                         event(new SubscriptionPaid($subscription));
