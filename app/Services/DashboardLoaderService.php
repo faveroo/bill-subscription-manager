@@ -49,7 +49,7 @@ class DashboardLoaderService
         $startYear = today()->copy()->startOfYear();
         $endYear = today()->copy()->endOfYear();
         $totalAnnualy = 0;
-        $subscriptions = auth()->user()->subscriptions()->with('billingCycle')->get();
+        $subscriptions = auth()->user()->subscriptions()->where('is_active', true)->with('billingCycle')->get();
 
         foreach($subscriptions as $subscription) {
             $billingDate = Carbon::parse($subscription->created_at);
