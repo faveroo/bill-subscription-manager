@@ -2,7 +2,7 @@ import { useForm, Link } from "@inertiajs/react";
 import { useEffect, useMemo } from "react";
 
 export default function LoginForm() {
-    const { data, setData, post, processing, errors, hasErrors, clearErrors } = useForm({
+    const { data, setData, post, processing, reset, errors, hasErrors, clearErrors } = useForm({
         email: '',
         password: '',
         error: ''
@@ -12,7 +12,11 @@ export default function LoginForm() {
 
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
-        post('/login');
+        post('/login', {
+            onError: () => {
+                reset('password');
+            }
+        });
     }
 
     useEffect(() => {
@@ -32,7 +36,7 @@ export default function LoginForm() {
     return (
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
             <h2 className="text-3xl font-bold text-white mb-2 text-center md:text-left">Acessar Conta</h2>
-            
+
             <input
                 type="email"
                 value={data.email}
