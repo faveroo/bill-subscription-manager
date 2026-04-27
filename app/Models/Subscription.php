@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['subscription_id', 'user_id', 'name', 'price', 'category_id', 'next_billing_date', 'billing_cycle_id', 'last_billing', 'is_active', 'notified_at'])]
+#[Fillable(['subscription_id', 'user_id', 'name', 'price', 'category_id', 'next_billing_date', 'billing_cycle_id', 'last_billing', 'is_active', 'notified_at', 'inactivated_at'])]
 class Subscription extends Model
 {
     public function casts(): array
