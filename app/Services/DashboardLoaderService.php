@@ -16,7 +16,7 @@ class DashboardLoaderService
         foreach($subscriptions as $subscription) {
             $date = $subscription->next_billing_date;
             $date = $date->toDateString();
-            
+
             $events[$date][] = [
                 'label' => $subscription->name,
                 'type' => 'payable'
@@ -48,8 +48,8 @@ class DashboardLoaderService
     {
         $startYear = today()->copy()->startOfYear();
         $endYear = today()->copy()->endOfYear();
-        $totalAnnualy = 0;
-        $subscriptions = auth()->user()->subscriptions()->where('is_active', true)->with('billingCycle')->get();
+        $totalAnnually = 0;
+        $subscriptions = auth()->user()->subscriptions()->with('billingCycle')->get();
 
         foreach($subscriptions as $subscription) {
             $billingDate = Carbon::parse($subscription->created_at);
@@ -59,13 +59,18 @@ class DashboardLoaderService
             }
 
             while ($billingDate <= $endYear) {
-                $totalAnnualy += $subscription->price;
+
+                if ($subscription->inactivated_at && $billingDate >= $subscription->inactivated_at) {
+                    break;
+                }
+
+                $totalAnnually += $subscription->price;
 
                 $billingDate = self::nextBillingDate($billingDate, $subscription->billingCycle->name);
             }
         }
 
-        return $totalAnnualy;
+        return $totalAnnually;
     }
 
     private static function nextBillingDate(Carbon $date, string $cycle): Carbon
