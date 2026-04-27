@@ -43,7 +43,8 @@ class SubscriptionService
     {
         return DB::transaction(function () use ($subscription) {
             $subscription->update([
-                'is_active' => !$subscription->is_active
+                'is_active' => !$subscription->is_active,
+                'inactivated_at' => !$subscription->is_active ? null : now()
             ]);
 
             event(new SubscriptionToggled($subscription));
