@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\Subscription\CreateSubscriptionData;
 use App\Http\Requests\SubscriptionEditRequest;
 use App\Models\BillingCycle;
 use App\Models\Category;
@@ -15,10 +16,12 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-use function Symfony\Component\Clock\now;
 
 class SubscriptionController extends Controller
 {
+
+    public function __construct(private SubscriptionService $service) {}
+
     public function index()
     {
         /** @var \App\Models\User $user */
@@ -38,11 +41,11 @@ class SubscriptionController extends Controller
         ]);
     }
 
-    public function store(SubscriptionRequest $request, SubscriptionService $service)
+    public function store(SubscriptionRequest $request)
     {
-        $data = $request->validated();
+        $data = CreateSubscriptionData::fromRequest($request);
 
-        $subscription = $service->create($request->user(), $data);
+        $subscription = $this->service->create($data);
 
         return redirect()->route('subscriptions.show', $subscription->id)->with('success', 'Assinatura criada com sucesso!');
     }
@@ -114,7 +117,7 @@ class SubscriptionController extends Controller
             return redirect()->back()->withErrors(['error' => 'Assinatura não encontrada']);
         }
 
-        SubscriptionService::toggle($subscription);
+        $this->service->toggle($subscription);
 
         return redirect()->back()->with(
             'success',

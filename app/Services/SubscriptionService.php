@@ -2,22 +2,34 @@
 
 namespace App\Services;
 
+use App\Data\Subscription\CreateSubscriptionData;
 use App\Models\Subscription;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Events\SubscriptionCreated;
 use App\Events\SubscriptionToggled;
 
 class SubscriptionService
 {
-    public static function create(User $user, array $data): Subscription
+    public function create(CreateSubscriptionData $data): Subscription
     {
-        return DB::transaction(function () use ($user, $data) {
-            $data['last_billing'] = Carbon::parse($data['last_billing'])
-                ->addDays(intval($data['free_trial_days'] ?? 0));
+        $user = User::findOrFail($data->userId);
 
-            $subscription = $user->subscriptions()->create($data);
+        return DB::transaction(function () use ($user, $data) {
+            $lastBilling = $this->calculateLastBilling(
+                $data->lastBilling,
+                $data->freeTrialDays
+            );
+
+            $subscription = $user->subscriptions()->create([
+                'name' => $data->name,
+                'price' => $data->price,
+                'billing_cycle_id' => $data->billingCycle,
+                'description' => $data->description,
+                'last_billing' => $lastBilling,
+            ]);
 
             event(new SubscriptionCreated($subscription));
 
@@ -25,7 +37,7 @@ class SubscriptionService
         });
     }
 
-    public static function update(Subscription $subscription, array $data): Subscription
+    public function update(Subscription $subscription, array $data): Subscription
     {
         $previousLastBilling = optional($subscription->last_billing)->toDateString();
 
@@ -39,7 +51,7 @@ class SubscriptionService
     }
 
 
-    public static function toggle(Subscription $subscription): Subscription
+    public function toggle(Subscription $subscription): Subscription
     {
         return DB::transaction(function () use ($subscription) {
             $subscription->update([
@@ -51,5 +63,11 @@ class SubscriptionService
 
             return $subscription;
         });
+    }
+
+    protected function calculateLastBilling(string $lastBilling, ?int $freeTrialDays): Carbon
+    {
+        return Carbon::parse($lastBilling)
+            ->addDays($freeTrialDays ?? 0);
     }
 }
