@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Data\Subscription\CreateSubscriptionData;
+use App\Data\Subscription\UpdateSubscriptionData;
 use App\Http\Requests\SubscriptionEditRequest;
 use App\Models\BillingCycle;
 use App\Models\Category;
@@ -83,27 +84,12 @@ class SubscriptionController extends Controller
         ]);
     }
 
-    public function update(SubscriptionEditRequest $request, $id)
+    public function update(SubscriptionEditRequest $request, Subscription $subscription)
     {
-        $data = $request->validated();
+        $data = UpdateSubscriptionData::fromRequest($request);
 
-        if (!$request->user()->subscriptions()->whereKey($id)->exists()) {
-            return redirect()->back()->with(['error' => 'Assinatura não encontrada']);
-        }
+        $this->service->update($subscription, $data);
 
-        $subscription = $request->user()->subscriptions()->findOrFail($id);
-
-        if (!$subscription->is_active) {
-            return back()->with(['error' => 'Não é possível editar uma assinatura inativa. Por favor, ative a assinatura antes de editá-la.']);
-        }
-
-        $previousLastBilling = optional($subscription->last_billing)->toDateString();
-
-        $subscription->update($data);
-
-        if ($data['last_billing'] !== $previousLastBilling) {
-            CheckExpiringSubscriptionService::handle($subscription->user);
-        }
         return redirect()->route('subscriptions.show', $subscription->id)->with('success', 'Assinatura atualizada com sucesso!');
     }
 

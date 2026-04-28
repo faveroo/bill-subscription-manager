@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Data\Subscription\CreateSubscriptionData;
+use App\Data\Subscription\UpdateSubscriptionData;
 use App\Models\Subscription;
 use App\Models\User;
 use Carbon\Carbon;
@@ -37,18 +38,45 @@ class SubscriptionService
         });
     }
 
-    public function update(Subscription $subscription, array $data): Subscription
-    {
-        $previousLastBilling = optional($subscription->last_billing)->toDateString();
+    public function update(Subscription $subscription, UpdateSubscriptionData $data): Subscription
+{
+    return DB::transaction(function () use ($subscription, $data) {
 
-        $subscription->update($data);
+        $previousLastBilling = optional($subscription->last_billing)?->toDateString();
 
-        if ($data['last_billing'] !== $previousLastBilling) {
-            app(CheckExpiringSubscriptionService::class)->handle($subscription->user);
+        if ($data->name !== null) {
+            $subscription->name = $data->name;
+        }
+
+        if ($data->price !== null) {
+            $subscription->price = $data->price;
+        }
+
+        if ($data->billingCycleId !== null) {
+            $subscription->billing_cycle_id = $data->billingCycleId;
+        }
+
+        $newLastBilling = $subscription->last_billing;
+
+        if ($data->lastBilling !== null) {
+            $newLastBilling = $this->calculateLastBilling(
+                $data->lastBilling,
+                $data->freeTrialDays
+            );
+
+            $subscription->last_billing = $newLastBilling;
+        }
+
+        $subscription->save();
+
+        if ($newLastBilling?->toDateString() !== $previousLastBilling) {
+            app(CheckExpiringSubscriptionService::class)
+                ->handle($subscription->user);
         }
 
         return $subscription;
-    }
+    });
+}
 
 
     public function toggle(Subscription $subscription): Subscription
