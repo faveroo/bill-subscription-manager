@@ -28,7 +28,7 @@ class SubscriptionService
                 'name' => $data->name,
                 'price' => $data->price,
                 'billing_cycle_id' => $data->billingCycle,
-                'description' => $data->description,
+                'category_id' => $data->category,
                 'last_billing' => $lastBilling,
             ]);
 
@@ -38,45 +38,44 @@ class SubscriptionService
         });
     }
 
-    public function update(Subscription $subscription, UpdateSubscriptionData $data): Subscription
-{
-    return DB::transaction(function () use ($subscription, $data) {
+   public function update(Subscription $subscription, UpdateSubscriptionData $data): Subscription
+    {
+        return DB::transaction(function () use ($subscription, $data) {
+            $previousLastBilling = $subscription->last_billing?->toDateString();
 
-        $previousLastBilling = optional($subscription->last_billing)?->toDateString();
+            if ($data->name !== null) {
+                $subscription->name = $data->name;
+            }
 
-        if ($data->name !== null) {
-            $subscription->name = $data->name;
-        }
+            if ($data->price !== null) {
+                $subscription->price = $data->price;
+            }
 
-        if ($data->price !== null) {
-            $subscription->price = $data->price;
-        }
+            if ($data->category !== null) {
+                $subscription->category_id = $data->category;
+            }
 
-        if ($data->billingCycleId !== null) {
-            $subscription->billing_cycle_id = $data->billingCycleId;
-        }
+            if ($data->billingCycleId !== null) {
+                $subscription->billing_cycle_id = $data->billingCycleId;
+            }
 
-        $newLastBilling = $subscription->last_billing;
+            if ($data->lastBilling !== null) {
+                $subscription->last_billing = $this->calculateLastBilling(
+                    $data->lastBilling,
+                    0
+                );
+            }
 
-        if ($data->lastBilling !== null) {
-            $newLastBilling = $this->calculateLastBilling(
-                $data->lastBilling,
-                $data->freeTrialDays
-            );
+            $subscription->save();
 
-            $subscription->last_billing = $newLastBilling;
-        }
+            if ($subscription->last_billing?->toDateString() !== $previousLastBilling) {
+                app(CheckExpiringSubscriptionService::class)
+                    ->handle($subscription->user);
+            }
 
-        $subscription->save();
-
-        if ($newLastBilling?->toDateString() !== $previousLastBilling) {
-            app(CheckExpiringSubscriptionService::class)
-                ->handle($subscription->user);
-        }
-
-        return $subscription;
-    });
-}
+            return $subscription->fresh();
+        });
+    }
 
 
     public function toggle(Subscription $subscription): Subscription
