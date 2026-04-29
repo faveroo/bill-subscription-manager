@@ -7,7 +7,6 @@ use App\Data\Subscription\UpdateSubscriptionData;
 use App\Models\Subscription;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Events\SubscriptionCreated;
 use App\Events\SubscriptionToggled;
@@ -67,11 +66,6 @@ class SubscriptionService
             }
 
             $subscription->save();
-
-            if ($subscription->last_billing?->toDateString() !== $previousLastBilling) {
-                app(CheckExpiringSubscriptionService::class)
-                    ->handle($subscription->user);
-            }
 
             return $subscription->fresh();
         });

@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\Services\CheckExpiringSubscriptionService;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Auth;
 
 class CheckExpiringSubscriptions extends Command
 {
@@ -16,7 +15,7 @@ class CheckExpiringSubscriptions extends Command
         $daysBefore = [7, 3, 1, 0]; // múltiplos lembretes
         $this->info('Verificando assinaturas próximas do vencimento...');
 
-        CheckExpiringSubscriptionService::handle(Auth::user(), $daysBefore);
+        CheckExpiringSubscriptionService::handle($daysBefore);
 
         $this->info('Notificações processadas!');
     }
