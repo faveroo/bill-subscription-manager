@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('subscription_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->date('billing_date');
+            $table->dateTime('event_date');
             $table->decimal('amount', 10, 2);
+            $table->char('type')->default('P');
             $table->timestamps();
         });
     }
