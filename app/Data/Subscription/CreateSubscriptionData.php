@@ -2,7 +2,7 @@
 
 namespace App\Data\Subscription;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\SubscriptionRequest;
 
 class CreateSubscriptionData
 {
@@ -12,22 +12,22 @@ class CreateSubscriptionData
         public string $lastBilling,
         public int $category,
         public int $billingCycle,
-        public ?string $description,
         public int $userId,
-        public int $freeTrialDays
+        public ?int $freeTrialDays
     ) {}
 
-    public static function fromRequest(Request $request): self
+    public static function fromRequest(SubscriptionRequest $request): self
     {
+        $validated = $request->validated();
+
         return new self(
-            name: $request->input('name'),
-            price: (float) $request->input('price'),
-            lastBilling: $request->input('last_billing'),
-            category: $request->input('category_id'),
-            billingCycle: $request->input('billing_cycle_id'),
-            description: $request->input('description'),
+            name: $validated['name'],
+            price: (float) $validated['price'],
+            lastBilling: $validated['last_billing'],
+            category: $validated['category_id'],
+            billingCycle: $validated['billing_cycle_id'],
             userId: auth()->id(),
-            freeTrialDays: $request->input('free_trial_days')
+            freeTrialDays: $validated['free_trial_days']
         );
     }
 }
