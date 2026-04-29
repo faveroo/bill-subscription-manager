@@ -26,7 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/subscriptions', [SubscriptionController::class, 'store'])->name('subscriptions.store');
     Route::get('/subscriptions/new', [SubscriptionController::class, 'create'])->name('subscriptions.new');
     Route::get('/subscriptions/{id}', [SubscriptionController::class, 'show'])->name('subscriptions.show');
-    Route::put('/subscriptions/{id}', [SubscriptionController::class, 'update'])->name('subscriptions.update')->middleware('throttle:10,1');
+    Route::put('/subscriptions/{subscription}', [SubscriptionController::class, 'update'])->name('subscriptions.update')->middleware('throttle:10,1');
     Route::patch('/subscriptions/{id}/toggle-active', [SubscriptionController::class, 'toggleActive'])->name('subscriptions.toggleActive')->middleware('throttle:10,1');
     Route::get('/subscriptions/{id}/edit', [SubscriptionController::class, 'edit'])->name('subscriptions.edit');
     Route::get('/subscriptions/{id}/history', [SubscriptionController::class, 'history'])->name('subscriptions.history');
