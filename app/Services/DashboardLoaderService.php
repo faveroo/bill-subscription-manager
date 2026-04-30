@@ -11,9 +11,12 @@ class DashboardLoaderService
 {
     public function load(): array
     {
-        $subscriptions = Auth::user()->subscriptions()->where('is_active', true)->get();
+        $subscriptions = Auth::user()
+            ->subscriptions()
+            ->where('is_active', true)
+            ->get();
         $events = [];
-        foreach($subscriptions as $subscription) {
+        foreach ($subscriptions as $subscription) {
             $date = $subscription->next_billing_date;
             $date = $date->toDateString();
 
@@ -25,7 +28,13 @@ class DashboardLoaderService
 
 
         return [
-            'subscriptions' => User::find(Auth::id())->subscriptions()->where('next_billing_date', '<=', Carbon::now()->addDays(10))->with('billingCycle')->get()->toArray(),
+            'subscriptions' => User::find(Auth::id())
+                ->subscriptions()
+                ->where('next_billing_date', '<=', Carbon::now()->addDays(10))
+                ->where('is_active', true)
+                ->with('billingCycle')
+                ->get()
+                ->toArray(),
             'totalSubscriptions' => $this->totalSubscriptions(),
             'valueOfSubscriptions' => $this->valueOfSubscriptions(),
             'totalAnnually' => $this->totalAnnually(),
@@ -36,12 +45,20 @@ class DashboardLoaderService
     public function totalSubscriptions(): int
     {
 
-        return auth()->user()->subscriptions()->where('is_active', true)->count();
+        return auth()
+            ->user()
+            ->subscriptions()
+            ->where('is_active', true)
+            ->count();
     }
 
     public function valueOfSubscriptions(): float
     {
-        return auth()->user()->subscriptions()->where('is_active', true)->sum('price');
+        return auth()
+            ->user()
+            ->subscriptions()
+            ->where('is_active', true)
+            ->sum('price');
     }
 
     public function totalAnnually(): float
@@ -51,7 +68,7 @@ class DashboardLoaderService
         $totalAnnually = 0;
         $subscriptions = auth()->user()->subscriptions()->with('billingCycle')->get();
 
-        foreach($subscriptions as $subscription) {
+        foreach ($subscriptions as $subscription) {
             $billingDate = Carbon::parse($subscription->created_at);
 
             while ($billingDate < $startYear) {
