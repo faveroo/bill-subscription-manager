@@ -75,7 +75,7 @@ class SubscriptionController extends Controller
         ]);
     }
 
-    public function edit($id)
+    public function edit(Int $id)
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
@@ -99,7 +99,7 @@ class SubscriptionController extends Controller
         return redirect()->route('subscriptions.show', $subscription->id)->with('success', 'Assinatura atualizada com sucesso!');
     }
 
-    public function toggleActive($id)
+    public function toggleActive(Int $id)
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();

@@ -37,11 +37,9 @@ class SubscriptionService
         });
     }
 
-   public function update(Subscription $subscription, UpdateSubscriptionData $data): Subscription
+    public function update(Subscription $subscription, UpdateSubscriptionData $data): Subscription
     {
         return DB::transaction(function () use ($subscription, $data) {
-            $previousLastBilling = $subscription->last_billing?->toDateString();
-
             if ($data->name !== null) {
                 $subscription->name = $data->name;
             }
@@ -56,6 +54,7 @@ class SubscriptionService
 
             if ($data->billingCycleId !== null) {
                 $subscription->billing_cycle_id = $data->billingCycleId;
+                $subscription->unsetRelation('billingCycle');
             }
 
             if ($data->lastBilling !== null) {
@@ -65,12 +64,15 @@ class SubscriptionService
                 );
             }
 
+            if ($data->resetNotifiedAt) {
+                $subscription->notified_at = null;
+            }
+
             $subscription->save();
 
             return $subscription->fresh();
         });
     }
-
 
     public function toggle(Subscription $subscription): Subscription
     {

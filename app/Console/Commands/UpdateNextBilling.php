@@ -2,59 +2,54 @@
 
 namespace App\Console\Commands;
 
+use App\Data\Subscription\UpdateSubscriptionData;
 use App\Events\SubscriptionPaid;
 use App\Models\Subscription;
 use App\Services\SubscriptionService;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 
 #[Signature('app:update-next-billing')]
 #[Description('Command description')]
 class UpdateNextBilling extends Command
 {
+    public function __construct(private SubscriptionService $service)
+    {
+        parent::__construct();
+    }
+
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): int
     {
+        $updatedSubscriptions = 0;
+
         Subscription::where('is_active', true)
             ->where('next_billing_date', '<=', now())
             ->with('billingCycle')
-            ->chunkById(100, function ($subscriptions) {
+            ->chunkById(100, function ($subscriptions) use (&$updatedSubscriptions) {
                 foreach ($subscriptions as $subscription) {
-                    DB::transaction(function () use ($subscription) {
-                        $subscription->refresh();
+                    $subscription->refresh();
 
-                        $nextBillingDate = $this->calculateNextBillingDate(
-                            $subscription->next_billing_date,
-                            $subscription->billingCycle
-                        );
+                    if (!$subscription->next_billing_date) {
+                        continue;
+                    }
 
-                        if (!$nextBillingDate) {
-                            return;
-                        }
+                    $updatedSubscription = $this->service->update(
+                        $subscription,
+                        UpdateSubscriptionData::forBillingRollForward($subscription),
+                    );
 
-                        SubscriptionService::update($subscription, [
-                            'last_billing' => $subscription->next_billing_date,
-                            'next_billing_date' => $nextBillingDate,
-                            'notified_at' => null
-                        ]);
+                    event(new SubscriptionPaid($updatedSubscription));
 
-                        event(new SubscriptionPaid($subscription));
-                    });
+                    $updatedSubscriptions++;
                 }
             });
-    }
 
-    private function calculateNextBillingDate($lastBilling, $billingCycle)
-    {
-        return match ($billingCycle->name) {
-            'Semanal' => $lastBilling->copy()->addWeek(),
-            'Mensal' => $lastBilling->copy()->addMonthNoOverflow(),
-            'Anual' => $lastBilling->copy()->addYear(),
-            default => null,
-        };
+        $this->info("{$updatedSubscriptions} assinatura(s) atualizada(s).");
+
+        return self::SUCCESS;
     }
 }
