@@ -119,7 +119,7 @@ class SubscriptionController extends Controller
         );
     }
 
-    public function history($id)
+    public function history(Int $id)
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
