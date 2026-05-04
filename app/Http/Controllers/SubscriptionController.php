@@ -51,11 +51,15 @@ class SubscriptionController extends Controller
         return redirect()->route('subscriptions.show', $subscription->id)->with('success', 'Assinatura criada com sucesso!');
     }
 
-    public function show($id)
+    public function show(Int $id)
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
         $subscription = $user->subscriptions()->with('billingCycle', 'category')->find($id);
+
+        if(!$subscription) {
+            return redirect()->back()->with('error', 'Erro ao visualizar assinatura');
+        }
 
         $total_paid = $subscription->billingHistories()->where('type', 'A')->sum('amount');
         $subscription->total_paid = $total_paid;
@@ -86,6 +90,8 @@ class SubscriptionController extends Controller
 
     public function update(SubscriptionEditRequest $request, Subscription $subscription)
     {
+        if(Auth::id() !== $subscription->user_id) return redirect()->back()->with('error', 'Erro ao editar assinatura');
+
         $data = UpdateSubscriptionData::fromRequest($request);
 
         $this->service->update($subscription, $data);
