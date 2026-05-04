@@ -37,7 +37,7 @@ O projeto tambem inclui suporte a notificacoes de vencimento, filtros por catego
 - PHP 8.3
 - Laravel 13
 - Eloquent ORM
-- SQLite como padrao no ambiente local
+- MySQL
 - Laravel Notifications
 
 ### Frontend
