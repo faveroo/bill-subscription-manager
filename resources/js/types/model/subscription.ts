@@ -10,5 +10,8 @@ export type Subscription = {
     next_billing_date: string;
     billing_cycle?: BillingCycle;
     category?: category;
+    service_url: string;
+    login_identifier: string;
+    notes: Text;
     total_paid: number;
 };
