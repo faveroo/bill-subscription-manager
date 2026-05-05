@@ -156,14 +156,14 @@ export default function NewSubscription({
 
                 <div className="rounded-xl border border-white/10 bg-zinc-900/35 p-6 shadow-sm shadow-black/30 ring-1 ring-white/5">
                     <form onSubmit={handleSubmit} className="space-y-5">
-                        <div className="grid grid-cols-4 gap-4 sm:grid-cols-4">
-                            <div className="sm:col-span-3">
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
+                            <div className="sm:col-span-2">
                                 <label className="mb-1 block text-sm font-medium text-white">
                                     Nome
                                 </label>
                                 <input
                                     type="text"
-                                    placeholder="Ex: Netflix"
+                                    placeholder="dawduah"
                                     value={data.name}
                                     onChange={(e) =>
                                         setData('name', e.target.value)
@@ -183,13 +183,13 @@ export default function NewSubscription({
 
                             </div>
 
-                            <div>
+                            <div className='sm:col-span-2'>
                                 <label className="mb-1 block text-sm font-medium text-white">
                                     Login
                                 </label>
                                 <input
                                     type="text"
-                                    placeholder="Ex: Netflix"
+                                    placeholder="Email ou Username"
                                     value={data.login_identifier}
                                     onChange={(e) =>
                                         setData('login_identifier', e.target.value)
