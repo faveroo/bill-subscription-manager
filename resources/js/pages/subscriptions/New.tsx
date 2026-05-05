@@ -67,6 +67,9 @@ export default function NewSubscription({
         category_id: '',
         has_free_trial: false,
         free_trial_days: '',
+        service_url: '',
+        login_identifier: '',
+        notes: '',
         last_billing: getTodayIsoDateInSaoPaulo(),
     });
 
@@ -153,8 +156,8 @@ export default function NewSubscription({
 
                 <div className="rounded-xl border border-white/10 bg-zinc-900/35 p-6 shadow-sm shadow-black/30 ring-1 ring-white/5">
                     <form onSubmit={handleSubmit} className="space-y-5">
-                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                            <div className="sm:col-span-2">
+                        <div className="grid grid-cols-4 gap-4 sm:grid-cols-4">
+                            <div className="sm:col-span-3">
                                 <label className="mb-1 block text-sm font-medium text-white">
                                     Nome
                                 </label>
@@ -172,14 +175,55 @@ export default function NewSubscription({
                                         {errors.name}
                                     </p>
                                 ) : (
-                                    <p className="mt-1 text-xs text-zinc-400">
+                                    <p className="mt-1 text-[10px] text-zinc-400">
                                         Use o nome do serviço para encontrar o
                                         ícone automaticamente.
                                     </p>
                                 )}
+
                             </div>
 
                             <div>
+                                <label className="mb-1 block text-sm font-medium text-white">
+                                    Login
+                                </label>
+                                <input
+                                    type="text"
+                                    placeholder="Ex: Netflix"
+                                    value={data.login_identifier}
+                                    onChange={(e) =>
+                                        setData('login_identifier', e.target.value)
+                                    }
+                                    className={fieldClass(!!errors.login_identifier)}
+                                />
+                                {errors.login_identifier ? (
+                                    <p className="mt-1 text-sm text-rose-200">
+                                        {errors.login_identifier}
+                                    </p>
+                                ) : ''}
+                            </div>
+
+                            <div className='sm:col-span-4'>
+                                <label className="mb-1 block text-sm font-medium text-white">
+                                    URL do serivço
+                                </label>
+                                <input
+                                    type="text"
+                                    placeholder="Ex: Netflix"
+                                    value={data.service_url}
+                                    onChange={(e) =>
+                                        setData('service_url', e.target.value)
+                                    }
+                                    className={fieldClass(!!errors.service_url)}
+                                />
+                                {errors.service_url ? (
+                                    <p className="mt-1 text-sm text-rose-200">
+                                        {errors.service_url}
+                                    </p>
+                                ) : ''}
+                            </div>
+
+                            <div className='sm:col-span-2'>
                                 <label className="mb-1 block text-sm font-medium text-white">
                                     Preço (R$)
                                 </label>
@@ -201,7 +245,7 @@ export default function NewSubscription({
                                 ) : null}
                             </div>
 
-                            <div>
+                            <div className='sm:col-span-2'>
                                 <label className="mb-1 block text-sm font-medium text-white">
                                     Categoria
                                 </label>
@@ -236,6 +280,26 @@ export default function NewSubscription({
                                         {errors.category_id}
                                     </p>
                                 ) : null}
+                            </div>
+
+                            <div className="sm:col-span-4">
+                                <label className="mb-1 block text-sm font-medium text-white">
+                                    Observações
+                                </label>
+                                <textarea
+                                    rows={3}
+                                    placeholder="..."
+                                    value={data.notes}
+                                    onChange={(e) =>
+                                        setData('notes', e.target.value)
+                                    }
+                                    className={cn(fieldClass(!!errors.notes), "min-h-9")}
+                                />
+                                {errors.notes ? (
+                                    <p className="mt-1 text-sm text-rose-200">
+                                        {errors.notes}
+                                    </p>
+                                ) : ''}
                             </div>
 
                             <div>
@@ -278,7 +342,7 @@ export default function NewSubscription({
                                 ) : null}
                             </div>
 
-                            <div>
+                            <div className='sm:col-span-2'>
                                 <label className="mb-1 block text-sm font-medium text-white">
                                     Última cobrança
                                 </label>
@@ -296,46 +360,30 @@ export default function NewSubscription({
                                     </p>
                                 ) : null}
                             </div>
+
                             <div>
                                 <label className="flex items-center gap-2 mb-1 block text-sm font-medium text-white">
-                                    Has Free Trial?
-                                    <input
-                                        type="checkbox"
-                                        onChange={(e) =>
-                                            setData('has_free_trial', e.target.checked)
-                                        }
-                                        checked={data.has_free_trial}
-                                    />
-                                    {errors.has_free_trial ? (
-                                        <p className="mt-1 text-sm text-rose-200">
-                                            {errors.has_free_trial}
-                                        </p>
-                                    ) : null}
+                                    Período de teste?
                                 </label>
-
-                                {data.has_free_trial ? (
-                                    <div className="w-full">
-                                        <input
-                                            type="number"
-                                            min="0"
-                                            max="9999"
-                                            value={data.free_trial_days}
-                                            placeholder='Ex: 7'
-                                            onChange={(e) =>
-                                                setData('free_trial_days', e.target.value)
-                                            }
-                                            className={fieldClass(!!errors.free_trial_days)}
-                                        />
-                                        {errors.free_trial_days ? (
-                                            <p className="mt-1 text-sm text-rose-200">
-                                                {errors.free_trial_days}
-                                            </p>
-                                        ) : null}
-                                    </div>
+                                <input
+                                    type="number"
+                                    min="0"
+                                    max="9999"
+                                    value={data.free_trial_days}
+                                    placeholder='Ex: 7'
+                                    onChange={(e) =>
+                                        setData('free_trial_days', e.target.value)
+                                    }
+                                    className={fieldClass(!!errors.free_trial_days)}
+                                />
+                                {errors.free_trial_days ? (
+                                    <p className="mt-1 text-sm text-rose-200">
+                                        {errors.free_trial_days}
+                                    </p>
                                 ) : null}
                             </div>
 
-                            <div>
+                            <div className='sm:col-span-4'>
                                 {nextBillingPreview ? (
                                     <>
                                         <label htmlFor="next-billing-preview" className="mb-1 block text-sm font-medium text-white">
@@ -350,12 +398,7 @@ export default function NewSubscription({
                                             </div>
                                         </div>
                                     </>
-                                ) : (
-                                    <div className="w-full mb-4 text-center text-xs text-zinc-400">
-                                        Selecione o ciclo para prever a próxima
-                                        cobrança.
-                                    </div>
-                                )}
+                                ) : ''}
                             </div>
                         </div>
 
