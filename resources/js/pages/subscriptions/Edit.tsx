@@ -56,6 +56,9 @@ export default function EditSubscription({
         category_id: String(subscription.category?.id ?? ''),
         billing_cycle_id: String(subscription.billing_cycle?.id ?? ''),
         last_billing: toDateInputValue(subscription.last_billing),
+        service_url: String(subscription.service_url ?? ''),
+        login_identifier: String(subscription.login_identifier ?? ''),
+        notes: String(subscription.notes ?? ''),
     });
 
     const fieldBase =
@@ -66,7 +69,7 @@ export default function EditSubscription({
     const fieldClass = (hasError: boolean) =>
         cn(fieldBase, hasError ? fieldError : null);
 
-    function handleSubmit(e: React.FormEvent) {
+    function handleSubmit(e: React.SubmitEvent) {
         e.preventDefault();
         put(`/subscriptions/${subscription.id}`);
     }
