@@ -63,14 +63,14 @@ export default function NewSubscription({
     const { data, setData, post, processing, errors } = useForm({
         name: '',
         price: '',
+        last_billing: getTodayIsoDateInSaoPaulo(),
         billing_cycle_id: '',
         category_id: '',
-        has_free_trial: false,
+        has_free_trial: false, //CAMPO NAO EXISTE NO BACKEND E NEM NO BANCO, VER SE DEVE ADICIONAR
         free_trial_days: '',
         service_url: '',
         login_identifier: '',
         notes: '',
-        last_billing: getTodayIsoDateInSaoPaulo(),
     });
 
     const fieldBase =
@@ -163,7 +163,7 @@ export default function NewSubscription({
                                 </label>
                                 <input
                                     type="text"
-                                    placeholder="dawduah"
+                                    placeholder="Nome da assinatura (Ex: Netflix, Spotify)"
                                     value={data.name}
                                     onChange={(e) =>
                                         setData('name', e.target.value)

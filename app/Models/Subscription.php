@@ -8,9 +8,27 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['subscription_id', 'user_id', 'name', 'price', 'category_id', 'next_billing_date', 'billing_cycle_id', 'last_billing', 'is_active', 'notified_at', 'inactivated_at'])]
+
 class Subscription extends Model
 {
+    protected $fillable = [
+        'subscription_id',
+        'user_id',
+        'name',
+        'price',
+        'category_id',
+        'next_billing_date',
+        'billing_cycle_id',
+        'last_billing',
+        'is_active',
+        'notified_at',
+        'inactivated_at',
+        //NO BANCO, O CAMPO ESTA COMO SERIVE, TEM QUE AJUSTAR
+        'serive_url',
+        'login_identifier', 
+        'notes'
+    ];
+
     public function casts(): array
     {
         return [
@@ -42,10 +60,18 @@ class Subscription extends Model
     }
 
 
-    public function getNextBillingDate()
+   public function getNextBillingDate()
     {
         $date = Carbon::parse($this->attributes['last_billing']);
-        return match ($this->billingCycle->name) {
+        
+        // Garante que temos o objeto do ciclo de cobrança carregado
+        $billingCycle = $this->billingCycle ?? BillingCycle::find($this->billing_cycle_id);
+
+        if (!$billingCycle) {
+            throw new \Exception('Ciclo de cobrança não encontrado');
+        }
+
+        return match ($billingCycle->name) {
             'Semanal' => $date->addWeek(),
             'Mensal' => $date->addMonthNoOverflow(),
             'Trimestral' => $date->addMonthNoOverflow(3),

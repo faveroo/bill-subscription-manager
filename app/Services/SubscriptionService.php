@@ -29,6 +29,9 @@ class SubscriptionService
                 'billing_cycle_id' => $data->billingCycle,
                 'category_id' => $data->category,
                 'last_billing' => $lastBilling,
+                'serive_url' => $data->service_url, //NO BANCO, O CAMPO ESTA COMO SERIVE, TEM QUE AJUSTAR
+                'login_identifier' => $data->login_identifier,
+                'notes' => $data->notes,
             ]);
 
             event(new SubscriptionCreated($subscription));
