@@ -13,6 +13,9 @@ class CreateSubscriptionData
         public int $category,
         public int $billingCycle,
         public int $userId,
+        public string $service_url,
+        public string $login_identifier,
+        public string $notes,
         public ?int $freeTrialDays
     ) {}
 
@@ -24,8 +27,11 @@ class CreateSubscriptionData
             name: $validated['name'],
             price: (float) $validated['price'],
             lastBilling: $validated['last_billing'],
-            category: $validated['category_id'],
             billingCycle: $validated['billing_cycle_id'],
+            category: $validated['category_id'],
+            service_url: $validated['service_url'],
+            login_identifier: $validated['login_identifier'],
+            notes: $validated['notes'],
             userId: auth()->id(),
             freeTrialDays: $validated['free_trial_days']
         );
